@@ -32,20 +32,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.HardwareAimbot;
 
 /**
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="AimBot: Teleop", group="Aimbot")
+@TeleOp(name="LukeBotTeleop", group="Aimbot")
 // @Disabled
-public class AimbotTeleop extends OpMode{
+public class LukeBotTeleop extends OpMode{
 
     /* Declare OpMode members. */
 
@@ -92,7 +88,8 @@ public class AimbotTeleop extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        robot.dankMeme2016.setPower(left);
+        /*right = -gamepad1.right_stick_y;
         if (!sniperModeOn) {
             robot.frontLeftMotor.setPower(left);
             robot.backLeftMotor.setPower(left);
@@ -141,7 +138,7 @@ public class AimbotTeleop extends OpMode{
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        //telemetry.addData("right", "%.2f", right);
         updateTelemetry(telemetry);
     }
 

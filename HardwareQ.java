@@ -11,26 +11,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This class can be used to define all the specific hardware for a AimBot.
  *
  */
-public class HardwareAimbot
+public class HardwareQ
 {
 
     /* Public OpMode members. */
-    public DcMotor frontLeftMotor = null;
-    public DcMotor frontRightMotor = null;
-    public DcMotor backLeftMotor = null;
-    public DcMotor backRightMotor = null;
     public DcMotor dankMeme2016 = null;
-    public Servo rightButtonPusher = null;
-    public Servo leftButtonPusher = null;
-    public Servo dropper = null;
-    public Servo cattleGuard = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareAimbot(){
+    public HardwareQ(){
 
     }
 
@@ -57,18 +49,7 @@ public class HardwareAimbot
         hwMap = ahwMap; // initialize before calling other init functions
 
         // Define and Initialize Motors
-
-        //frontLeftMotor  = initMotor("left_front", false);
-        //frontRightMotor = initMotor("right_front", true);
-        //backLeftMotor   = initMotor("left_back", false);
-        //backRightMotor  = initMotor("right_back", true);
         dankMeme2016 = initMotor("meme", true);
-
-        // Define and initialize ALL installed servos.
-        //rightButtonPusher = initServo("right_button_push", 0.0, false);
-       // leftButtonPusher  = initServo("left_button_push", 1.0, false);
-        //dropper           = initServo("dropper", 0.0, false);
-        //cattleGuard       = initServo("cattleguard", 0.0, true);
     }
 
     /***
