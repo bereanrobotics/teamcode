@@ -11,18 +11,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This class can be used to define all the specific hardware for a AimBot.
  *
  */
-public class HardwareQ
+public class HardwareQBot
 {
 
     /* Public OpMode members. */
+    public DcMotor spinner = null;
     public DcMotor dankMeme2016 = null;
+    public Servo Qermy = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareQ(){
+    public HardwareQBot(){
 
     }
 
@@ -49,7 +51,10 @@ public class HardwareQ
         hwMap = ahwMap; // initialize before calling other init functions
 
         // Define and Initialize Motors
+
         dankMeme2016 = initMotor("meme", true);
+        spinner = initMotor("spinner", true);
+        Qermy = initServo("qermy", 0.7, false);
     }
 
     /***

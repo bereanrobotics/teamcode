@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,26 +14,25 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This class can be used to define all the specific hardware for a AimBot.
  *
  */
-public class HardwareAimbot
+public class HardwareMiniBot
 {
 
     /* Public OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
-    public DcMotor backLeftMotor = null;
-    public DcMotor backRightMotor = null;
-    public DcMotor dankMeme2016 = null;
-    public Servo rightButtonPusher = null;
-    public Servo leftButtonPusher = null;
-    public Servo dropper = null;
-    public Servo cattleGuard = null;
+    public ColorSensor colorSensor = null;
+    public Servo pusher1 = null;
+    public Servo pusher2 = null;
+    public DigitalChannel r;
+    public DigitalChannel g;
+    public DigitalChannel b;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareAimbot(){
+    public HardwareMiniBot(){
 
     }
 
@@ -43,6 +45,7 @@ public class HardwareAimbot
         return motor;
     }
 
+
     /* handle standard servo initialization */
     private Servo initServo(String name, double pos, boolean reverse) {
         Servo srv = hwMap.servo.get(name);
@@ -50,6 +53,7 @@ public class HardwareAimbot
         srv.setPosition(pos);
         return srv;
     }
+
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
@@ -60,17 +64,18 @@ public class HardwareAimbot
 
         frontLeftMotor  = initMotor("left_front", false);
         frontRightMotor = initMotor("right_front", true);
-        backLeftMotor   = initMotor("left_back", false);
-        backRightMotor  = initMotor("right_back", true);
-        //dankMeme2016 = initMotor("meme", true);
+        pusher1 = initServo("pusher1", 0.1, false);
+        pusher2 = initServo("pusher2", 0.1, true);
+        colorSensor = hwMap.colorSensor.get("color");
+        colorSensor.enableLed(false);
+        /*r = hwMap.digitalChannel.get("r");
+        r.setMode(DigitalChannelController.Mode.OUTPUT);
+        g = hwMap.digitalChannel.get("g");
+        g.setMode(DigitalChannelController.Mode.OUTPUT);
+        b = hwMap.digitalChannel.get("b");
+        b.setMode(DigitalChannelController.Mode.OUTPUT);*/
 
-        // Define and initialize ALL installed servos.
-        //rightButtonPusher = initServo("right_button_push", 0.0, false);
-       // leftButtonPusher  = initServo("left_button_push", 1.0, false);
-        //dropper           = initServo("dropper", 0.0, false);
-        //cattleGuard       = initServo("cattleguard", 0.0, true);
     }
-
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
