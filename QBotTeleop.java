@@ -34,14 +34,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="QBotTeleop", group="Aimbot")
+@TeleOp(name="QBot: Teleop", group="Qbot")
 // @Disabled
 public class QBotTeleop extends OpMode{
 
@@ -88,14 +87,22 @@ public class QBotTeleop extends OpMode{
      */
     @Override
     public void loop() {
+        double catapultPower;
+        double spinnerPower;
         double left;
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-        robot.spinner.setPower(right/2);
-        robot.dankMeme2016.setPower(left/2);
+        catapultPower = -gamepad2.left_stick_y;
+        spinnerPower = gamepad2.left_stick_y;
+        right = gamepad1.right_stick_y;
+        left = gamepad1.left_stick_y;
+        robot.spinner.setPower(spinnerPower/2);
+        robot.catapultMotor.setPower(catapultPower/2);
+        robot.front_right.setPower(right);
+        robot.back_right.setPower (right);
+        robot.front_left.setPower (right);
+        robot.back_left.setPower (right);
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.left_bumper && !delayOn)
         {
@@ -128,8 +135,8 @@ public class QBotTeleop extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("catapult", "catapult encoder: %d", robot.catapultMotor.getCurrentPosition());
+        telemetry.addData("spinner", "right: %.2f", right);
         telemetry.addData("qermy", "%.2f", qermyOffset);
         updateTelemetry(telemetry);
     }

@@ -62,7 +62,7 @@ public class HardwareAimbot
         frontRightMotor = initMotor("right_front", true);
         backLeftMotor   = initMotor("left_back", false);
         backRightMotor  = initMotor("right_back", true);
-        //dankMeme2016 = initMotor("meme", true);
+        //catapultMotor = initMotor("meme", true);
 
         // Define and initialize ALL installed servos.
         //rightButtonPusher = initServo("right_button_push", 0.0, false);

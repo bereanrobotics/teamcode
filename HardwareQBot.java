@@ -16,7 +16,11 @@ public class HardwareQBot
 
     /* Public OpMode members. */
     public DcMotor spinner = null;
-    public DcMotor dankMeme2016 = null;
+    public DcMotor catapultMotor = null;
+    public DcMotor front_right = null;
+    public DcMotor front_left = null;
+    public DcMotor back_right = null;
+    public DcMotor back_left = null;
     public Servo Qermy = null;
 
     /* local OpMode members. */
@@ -33,7 +37,16 @@ public class HardwareQBot
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        return motor;
+    }
+    private DcMotor initMotorWithEncoder(String name, boolean reverse) {
+        DcMotor motor = hwMap.dcMotor.get(name);
+        if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         return motor;
     }
 
@@ -52,7 +65,11 @@ public class HardwareQBot
 
         // Define and Initialize Motors
 
-        dankMeme2016 = initMotor("meme", true);
+        catapultMotor = initMotorWithEncoder("meme", true);
+        front_right = initMotor("front_right", true);
+        front_left = initMotor("front_right", true);
+        back_right = initMotor("front_right", true);
+        back_left = initMotor("front_right", true);
         spinner = initMotor("spinner", true);
         Qermy = initServo("qermy", 0.7, false);
     }

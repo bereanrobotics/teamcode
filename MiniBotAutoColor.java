@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -53,6 +55,9 @@ public class MiniBotAutoColor extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F,0F,0F};
 
         /*
          * Initialize the drive system variables.
@@ -87,29 +92,36 @@ public class MiniBotAutoColor extends LinearOpMode{
         robot.backRightMotor.setPower(0);*/
         while(true) {
 
-            if (robot.colorSensor.red() > 1) {
+            // convert the RGB values to HSV values.
+            Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
+
+
+            if (hsvValues[0] <  50) {
                 robot.pusher1.setPosition(0.5);
-                telemetry.addData("redFound", "%d", robot.colorSensor.red());
+                /*telemetry.addData("redFound", "%d", robot.colorSensor.red());
                 telemetry.addData("pusher1", "%.2f", 0.5);
                 updateTelemetry(telemetry);
+                */
                 idle();
                 sleep(3000);
                 robot.pusher1.setPosition(0.1);
                 idle();
                 sleep(1000);
 
-            } else if (robot.colorSensor.blue() > 1) {
+            } else if (hsvValues[0] > 200) {
                 robot.pusher2.setPosition(0.5);
-                telemetry.addData("blueFound", "%d", robot.colorSensor.blue());
+                /*telemetry.addData("blueFound", "%d", robot.colorSensor.blue());
                 telemetry.addData("pusher2", "%.2f", 0.5);
                 updateTelemetry(telemetry);
+                */
 
                 robot.pusher2.setPosition(0.1);
                 idle();
                 sleep(1000);
             }
-            telemetry.addData("red", "%d", robot.colorSensor.red());
-            telemetry.addData("blue", "%d", robot.colorSensor.blue());
+            //telemetry.addData("red", "%d", robot.colorSensor.red());
+            //telemetry.addData("blue", "%d", robot.colorSensor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
             updateTelemetry(telemetry);
             idle();
             sleep(500);
