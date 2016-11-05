@@ -30,13 +30,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -70,7 +71,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class QbotAutonomousTest extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
+    private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final int     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -95,29 +96,35 @@ public class QbotAutonomousTest extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        idle();
+        //idle();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         if (opModeIsActive()) {
-
-            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
+            RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");
+            telemetry.addData("Status","Active");
+            setCatapultAndLaunch();
             sleep(2000);
-            robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
-            sleep(2000);
-            robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            sleep(2000);
-            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
-            sleep(2000);
-            robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
-            sleep(2000);
-            robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setCatapultAndLaunch();
 
         }
 
-        telemetry.addData("Path", "Complete");
+        telemetry.addData("Status", "Complete");
         telemetry.update();
+    }
+
+    private void setCatapultAndLaunch() {
+
+        robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
+        telemetry.addData("Catapult","Ready Position");
+        sleep(2000);
+        robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
+        telemetry.addData("Catapult","Fired!");
+        sleep(2000);
+        robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Catapult","Reset");
+        
     }
 
     /*
