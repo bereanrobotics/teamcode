@@ -67,9 +67,9 @@ public class HardwareQBot
 
         catapultMotor = initMotorWithEncoder("meme", true);
         front_right = initMotor("front_right", true);
-        front_left = initMotor("front_right", true);
-        back_right = initMotor("front_right", true);
-        back_left = initMotor("front_right", true);
+        front_left = initMotor("front_left", true);
+        back_right = initMotor("back_right", true);
+        back_left = initMotor("back_left", true);
         spinner = initMotor("spinner", true);
         Qermy = initServo("qermy", 0.7, false);
     }

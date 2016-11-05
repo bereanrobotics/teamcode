@@ -88,7 +88,7 @@ public class LukeBotTeleop extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
-        robot.dankMeme2016.setPower(left);
+        //robot.catapultMotor.setPower(left);
         /*right = -gamepad1.right_stick_y;
         if (!sniperModeOn) {
             robot.frontLeftMotor.setPower(left);

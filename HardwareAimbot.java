@@ -19,7 +19,7 @@ public class HardwareAimbot
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public DcMotor dankMeme2016 = null;
+    //public DcMotor dankMeme2016 = null;
     public Servo rightButtonPusher = null;
     public Servo leftButtonPusher = null;
     public Servo dropper = null;
@@ -58,6 +58,7 @@ public class HardwareAimbot
 
         // Define and Initialize Motors
 
+
         frontLeftMotor  = initMotor("left_front", false);
         frontRightMotor = initMotor("right_front", true);
         backLeftMotor   = initMotor("left_back", false);
@@ -65,8 +66,8 @@ public class HardwareAimbot
         //catapultMotor = initMotor("meme", true);
 
         // Define and initialize ALL installed servos.
-        //rightButtonPusher = initServo("right_button_push", 0.0, false);
-       // leftButtonPusher  = initServo("left_button_push", 1.0, false);
+        rightButtonPusher = initServo("right_button_push", 0.0, false);
+        leftButtonPusher  = initServo("left_button_push", 1.0, false);
         //dropper           = initServo("dropper", 0.0, false);
         //cattleGuard       = initServo("cattleguard", 0.0, true);
     }
