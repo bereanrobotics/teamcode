@@ -37,7 +37,6 @@ public class HardwareQBot
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         return motor;
     }
@@ -66,12 +65,12 @@ public class HardwareQBot
         // Define and Initialize Motors
 
         catapultMotor = initMotorWithEncoder("meme", true);
-        front_right = initMotor("front_right", true);
+        front_right = initMotor("front_right", false);
         front_left = initMotor("front_left", true);
-        back_right = initMotor("back_right", true);
+        back_right = initMotor("back_right", false);
         back_left = initMotor("back_left", true);
         spinner = initMotor("spinner", true);
-        Qermy = initServo("qermy", 0.7, false);
+        Qermy = initServo("qermy", 0.5, false);
     }
 
     /***
