@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -94,11 +94,11 @@ public class QBotTeleop extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         catapultPower = -gamepad2.left_stick_y;
-        spinnerPower = gamepad2.right_stick_y;
+        spinnerPower = -gamepad2.right_stick_y;
         right = gamepad1.right_stick_y;
         left = gamepad1.left_stick_y;
-        robot.spinner.setPower(spinnerPower/2);
-        robot.catapultMotor.setPower(catapultPower);
+        robot.spinner.setPower(spinnerPower);
+        robot.catapultMotor.setPower(catapultPower/1.8);
         robot.front_right.setPower(right);
         robot.back_right.setPower (right);
         robot.front_left.setPower (left);
@@ -110,7 +110,7 @@ public class QBotTeleop extends OpMode{
         }
         if (delayOn && qermyOffset > 0.1)
         {
-            qermyOffset -= 0.02;
+            qermyOffset -= 0.013;
         }
         if (delayOn && qermyOffset <= 0.1)
         {
@@ -125,10 +125,10 @@ public class QBotTeleop extends OpMode{
             }
 
         }
-        if (qermyOffset < 0.5 && !delayOn)
+        if (qermyOffset < 0.6 && !delayOn)
         {
             readyForTimerReset = true;
-            qermyOffset += 0.02;
+            qermyOffset += 0.013;
         }
         // Move both servos to new position.  Assume servos are mirror image of each other.
         robot.Qermy.setPosition(qermyOffset);

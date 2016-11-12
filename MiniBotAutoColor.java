@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import android.graphics.Color;
 
@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * This file provides  Telop driving for Aimbot.
  */
 
-@Autonomous(name="MiniBotAutoColor", group="MiniBot")
+@Autonomous(name="MiniBot: AutoColor", group="mini")
 // @Disabled
 public class MiniBotAutoColor extends LinearOpMode{
 
@@ -97,25 +97,25 @@ public class MiniBotAutoColor extends LinearOpMode{
 
 
             if (hsvValues[0] <  50) {
-                robot.pusher1.setPosition(0.5);
+                robot.pusherLeft.setPosition(0.5);
                 /*telemetry.addData("redFound", "%d", robot.colorSensor.red());
-                telemetry.addData("pusher1", "%.2f", 0.5);
+                telemetry.addData("pusherLeft", "%.2f", 0.5);
                 updateTelemetry(telemetry);
                 */
                 idle();
                 sleep(3000);
-                robot.pusher1.setPosition(0.1);
+                robot.pusherLeft.setPosition(0.1);
                 idle();
                 sleep(1000);
 
             } else if (hsvValues[0] > 200) {
-                robot.pusher2.setPosition(0.5);
+                robot.pusherRight.setPosition(0.5);
                 /*telemetry.addData("blueFound", "%d", robot.colorSensor.blue());
-                telemetry.addData("pusher2", "%.2f", 0.5);
+                telemetry.addData("pusherRight", "%.2f", 0.5);
                 updateTelemetry(telemetry);
                 */
 
-                robot.pusher2.setPosition(0.1);
+                robot.pusherRight.setPosition(0.1);
                 idle();
                 sleep(1000);
             }

@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This file provides  Telop driving for Minibot.
  */
 
-@TeleOp(name="Minibot: Teleop", group="Aimbot")
+@TeleOp(name="Minibot: Teleop", group="mini")
 //@Disabled
 public class MiniBotTeleop extends OpMode{
 
@@ -98,14 +98,25 @@ public class MiniBotTeleop extends OpMode{
             robot.frontLeftMotor.setPower(left/2);
             robot.frontRightMotor.setPower(right/2);
         }
-        if (gamepad1.right_bumper)
+
+        if (gamepad1.x)
         {
             sniperModeOn = true;
         }
-        if (gamepad1.left_bumper)
+        if (gamepad1.y)
         {
             sniperModeOn = false;
         }
+
+        if (gamepad1.left_trigger > 0)
+            robot.pusherLeft.setPosition(0.5);
+        else
+            robot.pusherLeft.setPosition(0);
+
+        if (gamepad1.right_trigger > 0)
+            robot.pusherRight.setPosition(0.6);
+        else
+            robot.pusherRight.setPosition(0);
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);

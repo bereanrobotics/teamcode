@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 /**
  * This is NOT an opmode.
@@ -38,6 +39,7 @@ public class HardwareQBot
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RobotLog.d("HardwareQbot init motor: " + name);
         return motor;
     }
     private DcMotor initMotorWithEncoder(String name, boolean reverse) {
@@ -46,6 +48,7 @@ public class HardwareQBot
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RobotLog.d("HardwareQbot init motor with encoder: " + name);
         return motor;
     }
 
@@ -54,11 +57,13 @@ public class HardwareQBot
         Servo srv = hwMap.servo.get(name);
         if (reverse) srv.setDirection(Servo.Direction.REVERSE);
         srv.setPosition(pos);
+        RobotLog.d("HardwareQbot init servo: " + name);
         return srv;
     }
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
+        RobotLog.d("HardwareQbot is initializing");
         // Save reference to Hardware map
         hwMap = ahwMap; // initialize before calling other init functions
 

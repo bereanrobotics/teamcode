@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -87,15 +87,23 @@ public class QbotAutonomousTest extends LinearOpMode {
     {
 
         robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
+        robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.catapultMotor.setPower(.5);
         telemetry.addData("Catapult","Ready Position");
+        telemetry.update();
         sleep(2000);
         robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
+        robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData("Catapult","Fired!");
+        telemetry.update();
         sleep(2000);
         robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Catapult","Reset");
+        telemetry.update();
 
     }
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -111,16 +119,38 @@ public class QbotAutonomousTest extends LinearOpMode {
         telemetry.update();
 
         //idle();
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         if (opModeIsActive()) {
             RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");
             telemetry.addData("Status","Active");
-            setCatapultAndLaunch();
-            sleep(2000);
-            setCatapultAndLaunch();
+            telemetry.update();
+
+            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
+            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.catapultMotor.setPower(.5);
+
+            while (opModeIsActive() && robot.catapultMotor.isBusy())
+            {
+                telemetry.addData("Catapult", "Position %d", robot.catapultMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            robot.catapultMotor.setPower(0);
+            sleep(1000);
+
+            robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
+            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.catapultMotor.setPower(.5);
+
+            while (opModeIsActive() && robot.catapultMotor.isBusy())
+            {
+                telemetry.addData("Catapult", "Position %d", robot.catapultMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            robot.catapultMotor.setPower(0);
+            robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
 

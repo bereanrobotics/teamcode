@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4998;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,8 +20,8 @@ public class HardwareMiniBot
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public ColorSensor colorSensor = null;
-    public Servo pusher1 = null;
-    public Servo pusher2 = null;
+    public Servo pusherLeft = null;
+    public Servo pusherRight = null;
     public DigitalChannel r;
     public DigitalChannel g;
     public DigitalChannel b;
@@ -64,8 +63,8 @@ public class HardwareMiniBot
 
         frontLeftMotor  = initMotor("left_front", false);
         frontRightMotor = initMotor("right_front", true);
-        pusher1 = initServo("pusher1", 0.1, false);
-        pusher2 = initServo("pusher2", 0.1, true);
+        pusherLeft = initServo("pusher1", 0.1, false);
+        pusherRight = initServo("pusher2", 0.1, true);
         colorSensor = hwMap.colorSensor.get("color");
         colorSensor.enableLed(false);
         /*r = hwMap.digitalChannel.get("r");
