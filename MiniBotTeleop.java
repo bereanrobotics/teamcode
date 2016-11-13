@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.team4998;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This file provides  Telop driving for Minibot.
  */
 
-@TeleOp(name="Minibot: Teleop", group="mini")
+//@TeleOp(name="Minibot: Teleop", group="mini")
 //@Disabled
 public class MiniBotTeleop extends OpMode{
 
@@ -122,7 +122,7 @@ public class MiniBotTeleop extends OpMode{
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("color", "%08X", robot.colorSensor.argb());
+        telemetry.addData("color", "%d", robot.getColorNumber());
         updateTelemetry(telemetry);
     }
 

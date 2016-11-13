@@ -82,7 +82,7 @@ public class SensorMRColor extends LinearOpMode {
     boolean bLedOn = false;
 
     // Set the LED in the beginning
-    robot.colorSensor.enableLed(bLedOn);
+    //robot.colorSensor.enableLed(bLedOn);
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -99,22 +99,24 @@ public class SensorMRColor extends LinearOpMode {
 
         // button is transitioning to a pressed state. So Toggle LED
         bLedOn = !bLedOn;
-        robot.colorSensor.enableLed(bLedOn);
+        //robot.colorSensor.enableLed(bLedOn);
       }
 
       // update previous state variable.
       bPrevState = bCurrState;
 
       // convert the RGB values to HSV values.
-      Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
+      //Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.
       telemetry.addData("LED", bLedOn ? "On" : "Off");
+      /*
       telemetry.addData("Clear", robot.colorSensor.alpha());
       telemetry.addData("Red  ", robot.colorSensor.red());
       telemetry.addData("Green", robot.colorSensor.green());
       telemetry.addData("Blue ", robot.colorSensor.blue());
       telemetry.addData("Hue", hsvValues[0]);
+      */
 
       // change the background color to match the color detected by the RGB sensor.
       // pass a reference to the hue, saturation, and value array as an argument
@@ -125,11 +127,11 @@ public class SensorMRColor extends LinearOpMode {
         }
       });
 
-
+/*
       robot.r.setState(robot.colorSensor.red() > 1);
       robot.g.setState(robot.colorSensor.green() > 1);
       robot.b.setState(robot.colorSensor.blue()> 1);
-
+*/
       telemetry.update();
       idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
     }

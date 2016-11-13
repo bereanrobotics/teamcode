@@ -30,9 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.team4998;
-
-import android.graphics.Color;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -41,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * This file provides  Telop driving for Aimbot.
  */
 
-@Autonomous(name="MiniBot: AutoColor", group="mini")
+@Autonomous(name="MiniBot: AutoColor2", group="mini")
 // @Disabled
 public class MiniBotAutoColor extends LinearOpMode{
 
@@ -49,21 +47,29 @@ public class MiniBotAutoColor extends LinearOpMode{
 
     HardwareMiniBot robot = new HardwareMiniBot(); // use the class created to define a Aimbot's hardware
 
-
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
 
+    static final int        SENSOR_RED     = 10;
+    static final int        SENSOR_BLUE    = 3;
+
+    static final double     PUSHER_DOWN    = 0.0;
+    static final double     PUSHER_UP      = 0.5;
+
+
+    Boolean redTeam = true; // flag to determine if we are the red or blue team.
+
     @Override
     public void runOpMode() throws InterruptedException {
-
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F,0F,0F};
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        double pusherRightPos = PUSHER_DOWN;
+        double pusherLeftPos = PUSHER_DOWN;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -90,41 +96,46 @@ public class MiniBotAutoColor extends LinearOpMode{
         robot.backLeftMotor.setPower(0);
         robot.frontRightMotor.setPower(0);
         robot.backRightMotor.setPower(0);*/
-        while(true) {
 
-            // convert the RGB values to HSV values.
-            Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
+        while(opModeIsActive()) {
 
+            int color = robot.getColorNumber();
 
-            if (hsvValues[0] <  50) {
-                robot.pusherLeft.setPosition(0.5);
-                /*telemetry.addData("redFound", "%d", robot.colorSensor.red());
-                telemetry.addData("pusherLeft", "%.2f", 0.5);
-                updateTelemetry(telemetry);
-                */
-                idle();
-                sleep(3000);
-                robot.pusherLeft.setPosition(0.1);
-                idle();
-                sleep(1000);
+            // this logic assumes the color sensor is on the right
+            pusherLeftPos = PUSHER_DOWN;
+            pusherRightPos = PUSHER_DOWN;
 
-            } else if (hsvValues[0] > 200) {
-                robot.pusherRight.setPosition(0.5);
-                /*telemetry.addData("blueFound", "%d", robot.colorSensor.blue());
-                telemetry.addData("pusherRight", "%.2f", 0.5);
-                updateTelemetry(telemetry);
-                */
+            if (color == SENSOR_RED) {
+                robot.redLED(true);
+                robot.blueLED(false);
+                if (redTeam) {
+                    pusherRightPos = PUSHER_UP;
+                } else {
+                    pusherLeftPos = PUSHER_UP;
+                }
 
-                robot.pusherRight.setPosition(0.1);
-                idle();
-                sleep(1000);
+            } else if (color == SENSOR_BLUE) {
+                robot.redLED(false);
+                robot.blueLED(true);
+                if (redTeam) {
+                    pusherLeftPos = PUSHER_UP;
+                } else {
+                    pusherRightPos = PUSHER_UP;
+                }
+
+            } else {
+                robot.redLED(false);
+                robot.blueLED(false);
+
             }
-            //telemetry.addData("red", "%d", robot.colorSensor.red());
-            //telemetry.addData("blue", "%d", robot.colorSensor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
+
+            robot.pusherLeft.setPosition(pusherLeftPos);
+            robot.pusherRight.setPosition(pusherRightPos);
+
+            telemetry.addData("ColorNumber: %d", color);
             updateTelemetry(telemetry);
+            sleep(50);
             idle();
-            sleep(500);
         }
 
 

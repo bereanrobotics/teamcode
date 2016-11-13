@@ -1,9 +1,15 @@
-package org.firstinspires.ftc.team4998;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,22 +23,37 @@ public class HardwareMiniBot
 {
 
     /* Public OpMode members. */
+    public DeviceInterfaceModule cdi = null; // core device interface
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
-    public ColorSensor colorSensor = null;
     public Servo pusherLeft = null;
     public Servo pusherRight = null;
+
+    // magic low level access to the MR color sensor as an i2c device
+    private I2cDevice colorC;
+    private I2cDeviceSynch colorCreader;
+
+    /*
     public DigitalChannel r;
     public DigitalChannel g;
     public DigitalChannel b;
-
+*/
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
+
     /* Constructor */
     public HardwareMiniBot(){
 
+    }
+
+    // we have to read directly from the I2c port since MR doesn't let us read what we need.
+    private void InitColorSensor()  {
+        colorC = hwMap.i2cDevice.get("cc");
+        colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
+        colorCreader.engage();
+        colorCreader.write8(3, 1);  // put sensor in Passive mode (0 for active)
     }
 
     /* handle standard motor initialization */
@@ -53,20 +74,25 @@ public class HardwareMiniBot
         return srv;
     }
 
-
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap; // initialize before calling other init functions
 
         // Define and Initialize Motors
-
         frontLeftMotor  = initMotor("left_front", false);
         frontRightMotor = initMotor("right_front", true);
+
+        // Define and Initialize Servos
         pusherLeft = initServo("pusher1", 0.1, false);
         pusherRight = initServo("pusher2", 0.1, true);
-        colorSensor = hwMap.colorSensor.get("color");
-        colorSensor.enableLed(false);
+
+        // save a reference to the core device interface to set LED lights
+        cdi = hwMap.deviceInterfaceModule.get("cdi");
+        InitColorSensor();
+
+        //colorSensor = hwMap.colorSensor.get("color");
+        //colorSensor.enableLed(false);
         /*r = hwMap.digitalChannel.get("r");
         r.setMode(DigitalChannelController.Mode.OUTPUT);
         g = hwMap.digitalChannel.get("g");
@@ -75,6 +101,26 @@ public class HardwareMiniBot
         b.setMode(DigitalChannelController.Mode.OUTPUT);*/
 
     }
+
+    public void drive(double right, double left) {
+        frontRightMotor.setPower(right);
+        frontLeftMotor.setPower(left);
+    }
+
+    int getColorNumber() {
+        byte[] colorCcache;
+        colorCcache = colorCreader.read(0x04, 1);
+        return(colorCcache[0] & 0xFF);
+    }
+
+    public void redLED(boolean state) {
+        cdi.setLED(1, state);
+    }
+
+    public void blueLED(boolean state) {
+        cdi.setLED(0, state);
+    }
+
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular

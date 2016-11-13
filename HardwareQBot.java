@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team4998;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,17 +37,18 @@ public class HardwareQBot
     private DcMotor initMotor(String name, boolean reverse) {
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
-        motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setPower(0);
         RobotLog.d("HardwareQbot init motor: " + name);
         return motor;
     }
     private DcMotor initMotorWithEncoder(String name, boolean reverse) {
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
-        motor.setPower(0);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setPower(0);
         RobotLog.d("HardwareQbot init motor with encoder: " + name);
         return motor;
     }

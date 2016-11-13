@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.team4998;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -81,7 +81,7 @@ public class QbotAutonomousTest extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.2;
     static final double     TURN_SPEED              = 0.5;
-    static final int        CATAPULT_LAUNCH_COUNT   = 935;
+    static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
     private void setCatapultAndLaunch() throws InterruptedException
     {
@@ -94,11 +94,11 @@ public class QbotAutonomousTest extends LinearOpMode {
         sleep(2000);
         robot.catapultMotor.setTargetPosition(COUNTS_PER_MOTOR_REV);
         robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData("Catapult","Fired!");
+        telemetry.addData("Catapult", "Fired!");
         telemetry.update();
         sleep(2000);
         robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("Catapult","Reset");
+        telemetry.addData("Catapult", "Reset");
         telemetry.update();
 
     }
@@ -123,7 +123,7 @@ public class QbotAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
             RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");
-            telemetry.addData("Status","Active");
+            telemetry.addData("Status", "Active");
             telemetry.update();
 
             robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
