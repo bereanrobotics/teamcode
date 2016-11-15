@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -28,6 +29,8 @@ public class HardwareMiniBot
     public DcMotor frontRightMotor = null;
     public Servo pusherLeft = null;
     public Servo pusherRight = null;
+
+    public LightSensor lightSensor;
 
     // magic low level access to the MR color sensor as an i2c device
     private I2cDevice colorC;
@@ -49,12 +52,23 @@ public class HardwareMiniBot
     }
 
     // we have to read directly from the I2c port since MR doesn't let us read what we need.
-    private void InitColorSensor()  {
+    private void initColorSensor()  {
         colorC = hwMap.i2cDevice.get("cc");
         colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
         colorCreader.engage();
         colorCreader.write8(3, 1);  // put sensor in Passive mode (0 for active)
     }
+
+    /*
+    private void initLEDStrip() {
+        r = hwMap.digitalChannel.get("r");
+        r.setMode(DigitalChannelController.Mode.OUTPUT);
+        g = hwMap.digitalChannel.get("g");
+        g.setMode(DigitalChannelController.Mode.OUTPUT);
+        b = hwMap.digitalChannel.get("b");
+        b.setMode(DigitalChannelController.Mode.OUTPUT);
+    }
+    */
 
     /* handle standard motor initialization */
     private DcMotor initMotor(String name, boolean reverse) {
@@ -87,27 +101,28 @@ public class HardwareMiniBot
         pusherLeft = initServo("pusher1", 0.1, false);
         pusherRight = initServo("pusher2", 0.1, true);
 
+        // get a reference to our Light Sensor object.
+        lightSensor = hwMap.lightSensor.get("light");
+
         // save a reference to the core device interface to set LED lights
         cdi = hwMap.deviceInterfaceModule.get("cdi");
-        InitColorSensor();
 
-        //colorSensor = hwMap.colorSensor.get("color");
-        //colorSensor.enableLed(false);
-        /*r = hwMap.digitalChannel.get("r");
-        r.setMode(DigitalChannelController.Mode.OUTPUT);
-        g = hwMap.digitalChannel.get("g");
-        g.setMode(DigitalChannelController.Mode.OUTPUT);
-        b = hwMap.digitalChannel.get("b");
-        b.setMode(DigitalChannelController.Mode.OUTPUT);*/
-
+        initColorSensor();
     }
 
-    public void drive(double right, double left) {
-        frontRightMotor.setPower(right);
+
+    // Power the left and right wheels as needed
+    public void drive(double left, double right) {
         frontLeftMotor.setPower(left);
+        frontRightMotor.setPower(right);
     }
 
-    int getColorNumber() {
+    // shorthand for drive with all zeros
+    public void park() {
+        drive(0,0);
+    }
+
+    public int getColorNumber() {
         byte[] colorCcache;
         colorCcache = colorCreader.read(0x04, 1);
         return(colorCcache[0] & 0xFF);

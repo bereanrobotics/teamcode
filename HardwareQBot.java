@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -16,6 +21,7 @@ public class HardwareQBot
 {
 
     /* Public OpMode members. */
+    public DeviceInterfaceModule cdi = null; // core device interface
     public DcMotor spinner = null;
     public DcMotor catapultMotor = null;
     public DcMotor front_right = null;
@@ -23,6 +29,10 @@ public class HardwareQBot
     public DcMotor back_right = null;
     public DcMotor back_left = null;
     public Servo Qermy = null;
+
+    // magic low level access to the MR color sensor as an i2c device
+    private I2cDevice colorC;
+    private I2cDeviceSynch colorCreader;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -62,6 +72,14 @@ public class HardwareQBot
         return srv;
     }
 
+    // we have to read directly from the I2c port since MR doesn't let us read what we need.
+    private void initColorSensor()  {
+        colorC = hwMap.i2cDevice.get("cc");
+        colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
+        colorCreader.engage();
+        colorCreader.write8(3, 1);  // put sensor in Passive mode (0 for active)
+    }
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         RobotLog.d("HardwareQbot is initializing");
@@ -77,6 +95,38 @@ public class HardwareQBot
         back_left = initMotor("back_left", true);
         spinner = initMotor("spinner", true);
         Qermy = initServo("qermy", 0.5, false);
+
+        // save a reference to the core device interface to set LED lights
+        //cdi = hwMap.deviceInterfaceModule.get("cdi");
+        //initColorSensor();
+
+    }
+
+    // Power the left and right wheels as needed
+    public void drive(double left, double right) {
+        front_left.setPower(left);
+        back_left.setPower(left);
+        front_right.setPower(right);
+        back_right.setPower(right);
+    }
+
+    // shorthand for drive with all zeros
+    public void park() {
+        drive(0, 0);
+    }
+
+    public int getColorNumber() {
+        byte[] colorCcache;
+        colorCcache = colorCreader.read(0x04, 1);
+        return(colorCcache[0] & 0xFF);
+    }
+
+    public void redLED(boolean state) {
+        cdi.setLED(1, state);
+    }
+
+    public void blueLED(boolean state) {
+        cdi.setLED(0, state);
     }
 
     /***

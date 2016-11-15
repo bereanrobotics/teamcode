@@ -35,6 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * This file provides  Telop driving for Aimbot.
@@ -50,7 +52,9 @@ public class QBotTeleop extends OpMode{
     double qermyOffset = 0.5;
     boolean delayOn = false;
     boolean readyForTimerReset = true;
+    boolean readyCatapultMode = false;
     private ElapsedTime     runtime = new ElapsedTime();
+    static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
 
     /*
@@ -98,13 +102,34 @@ public class QBotTeleop extends OpMode{
         right = gamepad1.right_stick_y;
         left = gamepad1.left_stick_y;
         robot.spinner.setPower(spinnerPower);
-        robot.catapultMotor.setPower(catapultPower/1.8);
+        if (!readyCatapultMode)
+        {
+            robot.catapultMotor.setPower(catapultPower/1.8);
+        }
         robot.front_right.setPower(right);
         robot.back_right.setPower (right);
         robot.front_left.setPower (left);
         robot.back_left.setPower (left);
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad2.left_bumper && !delayOn)
+        if (gamepad2.dpad_up && !readyCatapultMode)
+        {
+            readyCatapultMode = true;
+            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            runtime.reset();
+            //robot.catapultMotor.isBusy()
+        }
+        if (readyCatapultMode)
+        {
+            while ((runtime.seconds() < 0.6)) {
+                robot.catapultMotor.setPower(.5);
+            }
+            if (runtime.seconds() > 0.6)
+            {
+                robot.catapultMotor.setPower(0);
+                readyCatapultMode = false;
+            }
+        }
+        if (gamepad2.a && !delayOn)
         {
             delayOn = true;
         }

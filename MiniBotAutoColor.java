@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides  Telop driving for Aimbot.
@@ -56,8 +57,48 @@ public class MiniBotAutoColor extends LinearOpMode{
     static final double     PUSHER_DOWN    = 0.0;
     static final double     PUSHER_UP      = 0.5;
 
+    static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
 
     Boolean redTeam = true; // flag to determine if we are the red or blue team.
+
+    private ElapsedTime runtime = new ElapsedTime();  // required for delay
+
+    // delay routine that correctly handles opMode logic
+    private void delay(double seconds) throws InterruptedException {
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < seconds)) {
+            telemetry.addData("Delay", "T:%2.5f", runtime.seconds());
+            telemetry.update();
+            idle();
+        }
+    }
+
+    private void drive(double left, double right, double seconds) throws InterruptedException {
+        if (opModeIsActive()) {
+            robot.drive(left, right);
+            delay(seconds);
+        }
+        //    telemetry.addData("Drive", "L:%2.2f, R:%2.2f, T:%2.5f", left, right, runtime.seconds());
+    }
+
+    private void driveToLine(double left, double right, double seconds) throws InterruptedException {
+        if (opModeIsActive()) {
+            robot.drive(left, right);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < seconds) &&
+                    (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+                telemetry.addData("Light Level", robot.lightSensor.getLightDetected());
+                telemetry.addData("Delay", "T:%2.5f", runtime.seconds());
+                telemetry.update();
+                idle();
+            }
+        }
+    }
+
+
+    private void park() {
+        robot.drive(0,0);
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -74,28 +115,11 @@ public class MiniBotAutoColor extends LinearOpMode{
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step 1:  Drive forward for 1 seconds
-        /*robot.frontLeftMotor.setPower(FORWARD_SPEED);
-        robot.backLeftMotor.setPower(FORWARD_SPEED);
-        robot.frontRightMotor.setPower(FORWARD_SPEED);
-        sleep(1000);
-        // Step 2:  Spin right for 1.3 seconds
-        robot.frontLeftMotor.setPower(TURN_SPEED);
-        robot.backLeftMotor.setPower(TURN_SPEED);
-        robot.frontRightMotor.setPower(-TURN_SPEED);
-        robot.backRightMotor.setPower(-TURN_SPEED);
-        sleep(1000);
-        // Step 3:  Drive Backwards for 1 Second
-        robot.frontLeftMotor.setPower(-FORWARD_SPEED);
-        robot.backLeftMotor.setPower(-FORWARD_SPEED);
-        robot.frontRightMotor.setPower(-FORWARD_SPEED);
-        robot.backRightMotor.setPower(-FORWARD_SPEED);
-        sleep(1000);
-        // Step 4:  Stop and close the claw.
-        robot.frontLeftMotor.setPower(0);
-        robot.backLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.backRightMotor.setPower(0);*/
+        drive(FORWARD_SPEED, FORWARD_SPEED, 1.0);   // Step 1:  Drive forward for 1 seconds
+        drive(TURN_SPEED, -TURN_SPEED, 1.0);        // Step 2:  Spin right for 1.3 seconds
+        drive(-FORWARD_SPEED, -FORWARD_SPEED, 1.0); // Step 3:  Drive Backwards for 1 Second
+        park();                                      // Step 4: Stop
+
 
         while(opModeIsActive()) {
 
