@@ -102,8 +102,8 @@ public class HardwareAimbot
         //cattleGuard       = initServo("cattleguard", 0.0, true);
 
         // save a reference to the core device interface to set LED lights
-        //cdi = hwMap.deviceInterfaceModule.get("cdi");
-        //initColorSensor();
+        cdi = hwMap.deviceInterfaceModule.get("cdi");
+        initColorSensor();
 
     }
 

@@ -46,7 +46,7 @@ public class MiniBotAutoColor extends LinearOpMode{
 
     /* Declare OpMode members. */
 
-    HardwareMiniBot robot = new HardwareMiniBot(); // use the class created to define a Aimbot's hardware
+    HardwareAimbot robot = new HardwareAimbot(); // use the class created to define a Aimbot's hardware
 
     static final double     FORWARD_SPEED = 0.6;
     static final double     TURN_SPEED    = 0.5;
@@ -81,6 +81,7 @@ public class MiniBotAutoColor extends LinearOpMode{
         //    telemetry.addData("Drive", "L:%2.2f, R:%2.2f, T:%2.5f", left, right, runtime.seconds());
     }
 
+    /*
     private void driveToLine(double left, double right, double seconds) throws InterruptedException {
         if (opModeIsActive()) {
             robot.drive(left, right);
@@ -95,7 +96,7 @@ public class MiniBotAutoColor extends LinearOpMode{
         }
     }
 
-
+*/
     private void park() {
         robot.drive(0,0);
     }
@@ -115,10 +116,10 @@ public class MiniBotAutoColor extends LinearOpMode{
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        drive(FORWARD_SPEED, FORWARD_SPEED, 1.0);   // Step 1:  Drive forward for 1 seconds
-        drive(TURN_SPEED, -TURN_SPEED, 1.0);        // Step 2:  Spin right for 1.3 seconds
-        drive(-FORWARD_SPEED, -FORWARD_SPEED, 1.0); // Step 3:  Drive Backwards for 1 Second
-        park();                                      // Step 4: Stop
+        //drive(FORWARD_SPEED, FORWARD_SPEED, 1.0);   // Step 1:  Drive forward for 1 seconds
+        //drive(TURN_SPEED, -TURN_SPEED, 1.0);        // Step 2:  Spin right for 1.3 seconds
+        //drive(-FORWARD_SPEED, -FORWARD_SPEED, 1.0); // Step 3:  Drive Backwards for 1 Second
+        //park();                                      // Step 4: Stop
 
 
         while(opModeIsActive()) {
@@ -153,8 +154,8 @@ public class MiniBotAutoColor extends LinearOpMode{
 
             }
 
-            robot.pusherLeft.setPosition(pusherLeftPos);
-            robot.pusherRight.setPosition(pusherRightPos);
+            robot.leftButtonPusher.setPosition(pusherLeftPos);
+            robot.rightButtonPusher.setPosition(pusherRightPos);
 
             telemetry.addData("ColorNumber: %d", color);
             updateTelemetry(telemetry);
