@@ -49,7 +49,13 @@ public class QBotTeleop extends OpMode{
     /* Declare OpMode members. */
 
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
-    double qermyOffset = 0.5;
+    double qermyStartPos = 0.49019608;
+    double qermyEndPos = 0.07843137;
+    double qermyOffset = 0.49019608;
+    double qermySpeed = 0.01;
+    double pusherUpPos = 0.63921569;
+    double pusherDownPos = 0;
+
     boolean delayOn = false;
     boolean readyForTimerReset = true;
     boolean readyCatapultMode = false;
@@ -129,15 +135,31 @@ public class QBotTeleop extends OpMode{
                 readyCatapultMode = false;
             }
         }
+        if (gamepad2.right_bumper)
+        {
+            robot.pusherRight.setPosition(pusherUpPos);
+        }
+        else if (!gamepad2.right_bumper && robot.pusherRight.getPosition() != pusherDownPos)
+        {
+            robot.pusherRight.setPosition(pusherDownPos);
+        }
+        if (gamepad2.left_bumper)
+        {
+            robot.pusherLeft.setPosition(pusherUpPos);
+        }
+        else if (!gamepad2.left_bumper && robot.pusherLeft.getPosition() != pusherDownPos)
+        {
+            robot.pusherLeft.setPosition(pusherDownPos);
+        }
         if (gamepad2.a && !delayOn)
         {
             delayOn = true;
         }
-        if (delayOn && qermyOffset > 0.1)
+        if (delayOn && qermyOffset > qermyEndPos)
         {
-            qermyOffset -= 0.013;
+            qermyOffset -= qermySpeed;
         }
-        if (delayOn && qermyOffset <= 0.1)
+        if (delayOn && qermyOffset <= qermyEndPos)
         {
             if (readyForTimerReset)
             {
@@ -150,10 +172,10 @@ public class QBotTeleop extends OpMode{
             }
 
         }
-        if (qermyOffset < 0.6 && !delayOn)
+        if (qermyOffset < qermyStartPos && !delayOn)
         {
             readyForTimerReset = true;
-            qermyOffset += 0.013;
+            qermyOffset += qermySpeed;
         }
         // Move both servos to new position.  Assume servos are mirror image of each other.
         robot.Qermy.setPosition(qermyOffset);

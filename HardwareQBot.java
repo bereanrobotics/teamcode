@@ -29,6 +29,8 @@ public class HardwareQBot
     public DcMotor back_right = null;
     public DcMotor back_left = null;
     public Servo Qermy = null;
+    public Servo pusherLeft = null;
+    public Servo pusherRight = null;
 
     // magic low level access to the MR color sensor as an i2c device
     private I2cDevice colorC;
@@ -88,14 +90,15 @@ public class HardwareQBot
 
         // Define and Initialize Motors
 
-        catapultMotor = initMotorWithEncoder("meme", true);
-        front_right = initMotor("front_right", false);
-        front_left = initMotor("front_left", true);
-        back_right = initMotor("back_right", false);
-        back_left = initMotor("back_left", true);
-        spinner = initMotor("spinner", true);
-        Qermy = initServo("qermy", 0.5, false);
-
+        catapultMotor = initMotorWithEncoder("meme", false);
+        front_right = initMotorWithEncoder("front_right", false);
+        front_left = initMotorWithEncoder("front_left", true);
+        back_right = initMotorWithEncoder("back_right", false);
+        back_left = initMotorWithEncoder("back_left", true);
+        spinner = initMotor("spinner", false);
+        Qermy = initServo("qermy", 0.49019608, false);
+        pusherLeft = initServo("pusher1", 0, false);
+        pusherRight = initServo("pusher2", 0, true);
         // save a reference to the core device interface to set LED lights
         //cdi = hwMap.deviceInterfaceModule.get("cdi");
         //initColorSensor();

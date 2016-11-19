@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,9 +65,9 @@ import com.qualcomm.robotcore.util.RobotLog;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Qbot: Test Catapult", group="Qbot")
+@Autonomous(name="Qbot: Encoder Test", group="Qbot")
 //@Disabled
-public class QbotAutonomousTest extends LinearOpMode {
+public class QbotEncoderTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
@@ -76,15 +75,11 @@ public class QbotAutonomousTest extends LinearOpMode {
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP
-    static final int        FULL_ROTATION           = 1120;  //ticks in a full geared rotation
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    //static final int     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    //static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED              = 0.5;
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = .2;
+    static final double     TURN_SPEED              = .2;
     static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
     private void setCatapultAndLaunch() throws InterruptedException
@@ -96,7 +91,7 @@ public class QbotAutonomousTest extends LinearOpMode {
         telemetry.addData("Catapult","Ready Position");
         telemetry.update();
         sleep(2000);
-        robot.catapultMotor.setTargetPosition(FULL_ROTATION);
+        robot.catapultMotor.setTargetPosition(1120);
         robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData("Catapult", "Fired!");
         telemetry.update();
@@ -119,52 +114,48 @@ public class QbotAutonomousTest extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
+
+        // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
+
+
+        robot.front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
+
+        robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d :%7d :%7d",
+                robot.front_left.getCurrentPosition(),
+                robot.front_right.getCurrentPosition(),
+                robot.back_left.getCurrentPosition(),
+                robot.back_right.getCurrentPosition());
         telemetry.update();
 
-        //idle();
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        if (opModeIsActive()) {
-            RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");
-            telemetry.addData("Status", "Active");
-            telemetry.update();
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        // encoderDrive(drive_Speed, tleft, tright, bleft, bright, timeout)
+        encoderDrive(DRIVE_SPEED,  36,  36, 36, 36, 10.0);  // S1: Forward 48 Inches
+        //encoderDrive(DRIVE_SPEED, -12, 12, 12, -12, 1.0); // strafing left
+        //encoderDrive(DRIVE_SPEED, 12, -12, -12, 12, 1.0); // strafing right
+        //encoderDrive(TURN_SPEED,   12, 12, -12, -12, 1.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -36, -36, -36, -36, 10.0);  // S3: Reverse 48 Inches with 4 Sec timeout
 
-            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.catapultMotor.setPower(.3);
 
-            while (opModeIsActive() && robot.catapultMotor.isBusy())
-            {
-                telemetry.addData("Catapult", "Position %d", robot.catapultMotor.getCurrentPosition());
-                telemetry.update();
-                idle();
-            }
+        sleep(1000);     // pause for servos to move
 
-            robot.catapultMotor.setPower(0);
-            sleep(1000);
-
-            robot.catapultMotor.setTargetPosition(FULL_ROTATION);
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.catapultMotor.setPower(.3);
-
-            while (opModeIsActive() && robot.catapultMotor.isBusy())
-            {
-                telemetry.addData("Catapult", "Position %d", robot.catapultMotor.getCurrentPosition());
-                telemetry.update();
-                idle();
-            }
-
-            robot.catapultMotor.setPower(0);
-            robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            sleep(2000);
-
-        }
-
-        telemetry.addData("Status", "Complete");
+        telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -175,54 +166,73 @@ public class QbotAutonomousTest extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftInches1, double leftInches2, double rightInches1,double rightInches2,
                              double timeoutS) throws InterruptedException {
-        int newSpinnerTarget;
-        int newRightTarget;
+        int new_tLeftTarget;
+        int new_tRightTarget;
+        int new_bLeftTarget;
+        int new_bRightTarget;
+
+        DcMotor tLeft = robot.front_left;
+        DcMotor tRight = robot.front_right;
+        DcMotor bLeft = robot.back_left;
+        DcMotor bRight = robot.back_right;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newSpinnerTarget = robot.catapultMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            //newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.catapultMotor.setTargetPosition(newSpinnerTarget);
-            //robot.rightMotor.setTargetPosition(newRightTarget);
+            new_tLeftTarget = tLeft.getCurrentPosition() + (int)(leftInches1 * COUNTS_PER_INCH);
+            new_tRightTarget = tRight.getCurrentPosition() + (int)(rightInches1 * COUNTS_PER_INCH);
+            new_bLeftTarget = bLeft.getCurrentPosition() + (int)(leftInches2 * COUNTS_PER_INCH);
+            new_bRightTarget = bRight.getCurrentPosition() + (int)(rightInches2 * COUNTS_PER_INCH);
+            tLeft.setTargetPosition(new_tLeftTarget);
+            tRight.setTargetPosition(new_tRightTarget);
+            bLeft.setTargetPosition(new_bLeftTarget);
+            bRight.setTargetPosition(new_bRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.catapultMotor.setPower(Math.abs(speed));
-           // robot.rightMotor.setPower(Math.abs(speed));
+            tLeft.setPower(speed);
+            tRight.setPower(speed);
+            bLeft.setPower(speed);
+            bRight.setPower(speed);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.catapultMotor.isBusy())) {
-                //&& robot.rightMotor.isBusy()
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newSpinnerTarget,  0);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.catapultMotor.getCurrentPosition(),
-                                            robot.catapultMotor.getCurrentPosition());
-                telemetry.update();
+                    (runtime.seconds() < timeoutS) &&
+                    ( tLeft.isBusy() && tRight.isBusy()  && bLeft.isBusy() && bRight.isBusy())) {
 
-                // Allow time for other processes to run.
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d :%7d :%7d", new_tLeftTarget, new_tRightTarget, new_bLeftTarget, new_bRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                        tLeft.getCurrentPosition(),
+                        tRight.getCurrentPosition(),
+                        bLeft.getCurrentPosition(),
+                        bRight.getCurrentPosition());
+                telemetry.update();
                 idle();
             }
-
-            // Stop all motion;
-            robot.catapultMotor.setPower(0);
-            //robot.rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
         }
+
+        // Stop all motion;
+        tLeft.setPower(0);
+        tRight.setPower(0);
+        bLeft.setPower(0);
+        bRight.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        tLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //  sleep(250);   // optional pause after each move
     }
 }
