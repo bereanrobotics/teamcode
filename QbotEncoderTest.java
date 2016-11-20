@@ -80,26 +80,63 @@ public class QbotEncoderTest extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = .2;
     static final double     TURN_SPEED              = .2;
-    static final int        CATAPULT_LAUNCH_COUNT   = 435;
+    static final int        CATAPULT_LAUNCH_COUNT_SHORT   = 750;
+    static final int        CATAPULT_LAUNCH_COUNT_LONG   = -750;
 
-    private void setCatapultAndLaunch() throws InterruptedException
+    private void setCatapultAndLaunch(boolean setServo, boolean longLaunch) throws InterruptedException
     {
-
-        robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT);
-        robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.catapultMotor.setPower(.5);
-        telemetry.addData("Catapult","Ready Position");
+        // first reset encoder so that the current position is the zero position
+        robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Catapult", "Reset");
         telemetry.update();
-        sleep(2000);
+        // reset the timeout time and start motion.
+        runtime.reset();
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        while (opModeIsActive() && (runtime.seconds() < 1) && robot.catapultMotor.isBusy()) {
+            telemetry.addData("Catapult", "Resetting");
+            telemetry.update();
+            idle();
+        }
+
+        if (longLaunch) {
+            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT_LONG);
+        } else {
+            robot.catapultMotor.setTargetPosition(CATAPULT_LAUNCH_COUNT_SHORT);
+        }
+        robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.catapultMotor.setPower(0.5);
+
+        runtime.reset();
+        // Move catapult into loading position
+        while (opModeIsActive() && (runtime.seconds() < 2) || robot.catapultMotor.isBusy()) {
+            telemetry.addData("Catapult","Ready Position %d", robot.catapultMotor.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+        robot.catapultMotor.setPower(0.0);
+        idle();
+        //sleep(2000);
+        if (setServo)
+        {
+            robot.Qermy.setPosition(0.07843137);
+            sleep(2000);
+            robot.Qermy.setPosition(0.49019608);
+            sleep(1000);
+        }
         robot.catapultMotor.setTargetPosition(1120);
         robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData("Catapult", "Fired!");
         telemetry.update();
-        sleep(2000);
+        runtime.reset();
+        // keep looping while we are still active
+        while (opModeIsActive() && (runtime.seconds() < 1) || robot.catapultMotor.isBusy()) {
+            idle();
+        }
+        //sleep(2000);
         robot.catapultMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Catapult", "Reset");
         telemetry.update();
-
+        idle();
     }
 
 
@@ -144,11 +181,29 @@ public class QbotEncoderTest extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // encoderDrive(drive_Speed, tleft, tright, bleft, bright, timeout)
-        encoderDrive(DRIVE_SPEED,  36,  36, 36, 36, 10.0);  // S1: Forward 48 Inches
+
+
+
+
+
+        //Autonomous Red 1
+        //Launch first ball
+        setCatapultAndLaunch(false, false);
+        //Knock ball into catapult and launch second ball
+        setCatapultAndLaunch(true, false);
+
+
+
+
+
+
+        //encoderDrive(DRIVE_SPEED,  36,  36, 36, 36, 10.0);  // S1: Forward 48 Inches
+
         //encoderDrive(DRIVE_SPEED, -12, 12, 12, -12, 1.0); // strafing left
         //encoderDrive(DRIVE_SPEED, 12, -12, -12, 12, 1.0); // strafing right
         //encoderDrive(TURN_SPEED,   12, 12, -12, -12, 1.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -36, -36, -36, -36, 10.0);  // S3: Reverse 48 Inches with 4 Sec timeout
+
+        //encoderDrive(DRIVE_SPEED, -36, -36, -36, -36, 10.0);  // S3: Reverse 48 Inches with 4 Sec timeout
 
 
         sleep(1000);     // pause for servos to move
