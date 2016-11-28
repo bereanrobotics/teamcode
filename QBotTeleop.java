@@ -58,7 +58,10 @@ public class QBotTeleop extends OpMode{
 
     boolean delayOn = false;
     boolean readyForTimerReset = true;
+    boolean needsTimerReset = true;
     boolean readyCatapultMode = false;
+    boolean launchCatapultModeOn = false;
+    boolean readyCatapultModeOn = false;
     private ElapsedTime     runtime = new ElapsedTime();
     static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
@@ -92,6 +95,30 @@ public class QBotTeleop extends OpMode{
     public void start() {
     }
 
+    private void readyCatapult() {
+        robot.catapultMotor.setPower(0.25);
+        if (gamepad2.dpad_right || robot.launchButton.getState())
+        {
+            robot.catapultMotor.setPower(0.0);
+            readyCatapultModeOn = false;
+        }
+    }
+
+    private void launchCatapult() {
+        robot.catapultMotor.setPower(0.5);
+        if (needsTimerReset && !robot.launchButton.getState())
+        {
+            runtime.reset();
+            needsTimerReset = false;
+        }
+        if (runtime.seconds() > 0.2 && !needsTimerReset || gamepad2.dpad_right)
+        {
+            robot.catapultMotor.setPower(0.0);
+            needsTimerReset = true;
+            launchCatapultModeOn = false;
+        }
+    }
+
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -104,11 +131,11 @@ public class QBotTeleop extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         catapultPower = -gamepad2.left_stick_y;
-        spinnerPower = -gamepad2.right_stick_y;
+        spinnerPower = gamepad2.right_stick_y;
         right = gamepad1.right_stick_y;
         left = gamepad1.left_stick_y;
         robot.spinner.setPower(spinnerPower);
-        if (!readyCatapultMode)
+        if (!readyCatapultModeOn && !launchCatapultModeOn)
         {
             robot.catapultMotor.setPower(catapultPower/1.8);
         }
@@ -117,7 +144,7 @@ public class QBotTeleop extends OpMode{
         robot.front_left.setPower (left);
         robot.back_left.setPower (left);
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad2.dpad_up && !readyCatapultMode)
+        /*if (gamepad2.dpad_up && !readyCatapultMode)
         {
             readyCatapultMode = true;
             robot.catapultMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -134,7 +161,7 @@ public class QBotTeleop extends OpMode{
                 robot.catapultMotor.setPower(0);
                 readyCatapultMode = false;
             }
-        }
+        }*/
         if (gamepad2.right_bumper)
         {
             robot.pusherRight.setPosition(pusherUpPos);
@@ -151,7 +178,7 @@ public class QBotTeleop extends OpMode{
         {
             robot.pusherLeft.setPosition(pusherDownPos);
         }
-        if (gamepad2.a && !delayOn)
+        if (gamepad2.dpad_left && !delayOn)
         {
             delayOn = true;
         }
@@ -179,6 +206,23 @@ public class QBotTeleop extends OpMode{
         }
         // Move both servos to new position.  Assume servos are mirror image of each other.
         robot.Qermy.setPosition(qermyOffset);
+
+        if (gamepad2.dpad_down && !readyCatapultModeOn && !launchCatapultModeOn)
+        {
+            readyCatapultModeOn = true;
+        }
+        if (gamepad2.dpad_up && !launchCatapultModeOn && !readyCatapultModeOn)
+        {
+            launchCatapultModeOn = true;
+        }
+        if (readyCatapultModeOn)
+        {
+            readyCatapult();
+        }
+        if (launchCatapultModeOn)
+        {
+            launchCatapult();
+        }
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);

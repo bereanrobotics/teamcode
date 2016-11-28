@@ -87,6 +87,43 @@ public class QbotAutonomousTest extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
+    /*
+ *  Method to perfmorm a relative move, based on encoder counts.
+ *  Encoders are not reset as the move is based on the current position.
+ *  Move will stop if any of three conditions occur:
+ *  1) Move gets to the desired position
+ *  2) Move runs out of time
+ *  3) Driver stops the opmode running.
+ */
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) throws InterruptedException {
+        int newSpinnerTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            robot.setTargetPosition(leftInches, rightInches);
+            robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.drive(speed, speed);
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // reset the timeout time and start motion.
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) && robot.isDriving()) {
+                // Allow time for other processes to run.
+                idle();
+            }
+
+        }
+
+        // Stop all motion;
+        robot.drive(0,0);
+        // Turn off RUN_TO_POSITION
+        robot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /*
     private void setCatapultAndLaunch() throws InterruptedException
     {
 
@@ -106,8 +143,38 @@ public class QbotAutonomousTest extends LinearOpMode {
         telemetry.update();
 
     }
+    */
 
+    // attempts to place catapult in launch position (returns true if successful)
+    private boolean readyCatapult() throws InterruptedException {
+        robot.catapultMotor.setPower(0.25);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 10) && !robot.launchButton.getState()) {
+            // Allow time for other processes to run.
+            idle();
+        }
+        robot.catapultMotor.setPower(0.0);
+        return robot.launchButton.getState();
+    }
 
+    private boolean launchCatapult() throws InterruptedException {
+        robot.catapultMotor.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5) && robot.launchButton.getState()) {
+            idle();
+        }
+        sleep(500);
+        robot.catapultMotor.setPower(0.0);
+        return robot.launchButton.getState();
+    }
+
+    private void loadCatapult() throws InterruptedException {
+        sleep(1000);
+        robot.Qermy.setPosition(0.07843137);
+        sleep(500);
+        robot.Qermy.setPosition(0.49019608);
+        sleep(1000);
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -118,14 +185,21 @@ public class QbotAutonomousTest extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        //idle();
         waitForStart();
 
+
         if (opModeIsActive()) {
+
+            readyCatapult();
+            launchCatapult();
+            readyCatapult();
+            loadCatapult();
+            launchCatapult();
+
+            encoderDrive(DRIVE_SPEED, 15, 15, 10); // move forward a bit
+
+
+/*
             RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");
             telemetry.addData("Status", "Active");
             telemetry.update();
@@ -163,66 +237,8 @@ public class QbotAutonomousTest extends LinearOpMode {
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
-    }
-
-
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) throws InterruptedException {
-        int newSpinnerTarget;
-        int newRightTarget;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newSpinnerTarget = robot.catapultMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            //newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.catapultMotor.setTargetPosition(newSpinnerTarget);
-            //robot.rightMotor.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.catapultMotor.setPower(Math.abs(speed));
-           // robot.rightMotor.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.catapultMotor.isBusy())) {
-                //&& robot.rightMotor.isBusy()
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newSpinnerTarget,  0);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.catapultMotor.getCurrentPosition(),
-                                            robot.catapultMotor.getCurrentPosition());
-                telemetry.update();
-
-                // Allow time for other processes to run.
-                idle();
-            }
-
-            // Stop all motion;
-            robot.catapultMotor.setPower(0);
-            //robot.rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.catapultMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
+        */
         }
     }
+
 }

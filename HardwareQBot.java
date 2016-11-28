@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -31,6 +33,13 @@ public class HardwareQBot
     public Servo Qermy = null;
     public Servo pusherLeft = null;
     public Servo pusherRight = null;
+    public DigitalChannel launchButton = null;
+
+    static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // magic low level access to the MR color sensor as an i2c device
     private I2cDevice colorC;
@@ -54,12 +63,12 @@ public class HardwareQBot
         RobotLog.d("HardwareQbot init motor: " + name);
         return motor;
     }
-    private DcMotor initMotorWithEncoder(String name, boolean reverse) {
+    private DcMotor initMotorWithEncoder(String name, boolean reverse, boolean zeroBreak) {
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (zeroBreak) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setPower(0);
         RobotLog.d("HardwareQbot init motor with encoder: " + name);
         return motor;
@@ -75,8 +84,8 @@ public class HardwareQBot
     }
 
     // we have to read directly from the I2c port since MR doesn't let us read what we need.
-    private void initColorSensor()  {
-        colorC = hwMap.i2cDevice.get("cc");
+    private void initColorSensor(String name)  {
+        colorC = hwMap.i2cDevice.get(name);
         colorCreader = new I2cDeviceSynchImpl(colorC, I2cAddr.create8bit(0x3c), false);
         colorCreader.engage();
         colorCreader.write8(3, 1);  // put sensor in Passive mode (0 for active)
@@ -90,19 +99,20 @@ public class HardwareQBot
 
         // Define and Initialize Motors
 
-        catapultMotor = initMotorWithEncoder("meme", false);
-        front_right = initMotorWithEncoder("front_right", false);
-        front_left = initMotorWithEncoder("front_left", true);
-        back_right = initMotorWithEncoder("back_right", false);
-        back_left = initMotorWithEncoder("back_left", true);
+        catapultMotor = initMotorWithEncoder("meme", true, false);
+        front_right = initMotorWithEncoder("front_right", false, true);
+        front_left = initMotorWithEncoder("front_left", true, true);
+        back_right = initMotorWithEncoder("back_right", false, true);
+        back_left = initMotorWithEncoder("back_left", true, true);
         spinner = initMotor("spinner", false);
         Qermy = initServo("qermy", 0.49019608, false);
         pusherLeft = initServo("pusher1", 0, false);
         pusherRight = initServo("pusher2", 0, true);
         // save a reference to the core device interface to set LED lights
-        //cdi = hwMap.deviceInterfaceModule.get("cdi");
-        //initColorSensor();
-
+        cdi = hwMap.deviceInterfaceModule.get("cdi");
+        initColorSensor("cs");
+        launchButton = hwMap.digitalChannel.get("launchButton");
+        launchButton.setMode(DigitalChannelController.Mode.INPUT);
     }
 
     // Power the left and right wheels as needed
@@ -113,9 +123,28 @@ public class HardwareQBot
         back_right.setPower(right);
     }
 
-    // shorthand for drive with all zeros
-    public void park() {
-        drive(0, 0);
+    public void setMode(DcMotor.RunMode mode) {
+        front_left.setMode(mode);
+        back_left.setMode(mode);
+        front_right.setMode(mode);
+        back_right.setMode(mode);
+    }
+
+    public void setTargetPosition(double left, double right) {
+        front_left.setTargetPosition(front_left.getCurrentPosition() + (int) (left * COUNTS_PER_INCH));
+        back_left.setTargetPosition(back_left.getCurrentPosition() + (int) (left * COUNTS_PER_INCH));
+        front_right.setTargetPosition(front_right.getCurrentPosition() + (int) (right * COUNTS_PER_INCH));
+        back_right.setTargetPosition(back_right.getCurrentPosition() + (int) (right * COUNTS_PER_INCH));
+    }
+
+    public boolean isDriving() {
+        /* telemetry.addData("Driving:",  "Running at %7d :%7d %7d :%7d",
+                front_left.getCurrentPosition(),
+                back_left.getCurrentPosition(),
+                front_right.getCurrentPosition(),
+                back_right.getCurrentPosition());
+*/
+        return (front_left.isBusy() && back_left.isBusy() && front_right.isBusy() && back_right.isBusy());
     }
 
     public int getColorNumber() {
