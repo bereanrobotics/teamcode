@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.HardwareAimbot;
  */
 
 @TeleOp(name="AimBot: Teleop", group="Aimbot")
-// @Disabled
+@Disabled
 public class AimbotTeleop extends OpMode{
 
     /* Declare OpMode members. */

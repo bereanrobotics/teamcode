@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Aimbot - Autonomous Test", group="Aimbot")
-// @Disabled
+@Disabled
 public class AimbotAutonomousTest extends LinearOpMode{
 
 

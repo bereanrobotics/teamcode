@@ -53,7 +53,8 @@ public class QBotTeleop extends OpMode{
     double qermyEndPos = 0.07843137;
     double qermyOffset = 0.49019608;
     double qermySpeed = 0.01;
-    double pusherUpPos = 0.63921569;
+    double pusherUpRightPos = 0.439;
+    double pusherUpLeftPos = 0.568;
     double pusherDownPos = 0;
 
     boolean delayOn = false;
@@ -62,6 +63,8 @@ public class QBotTeleop extends OpMode{
     boolean readyCatapultMode = false;
     boolean launchCatapultModeOn = false;
     boolean readyCatapultModeOn = false;
+    boolean catapultDefaultDirection = true;
+    boolean sniperModeOn = false;
     private ElapsedTime     runtime = new ElapsedTime();
     static final int        CATAPULT_LAUNCH_COUNT   = 435;
 
@@ -95,23 +98,23 @@ public class QBotTeleop extends OpMode{
     public void start() {
     }
 
-    private void readyCatapult() {
-        robot.catapultMotor.setPower(0.25);
-        if (gamepad2.dpad_right || robot.launchButton.getState())
+    private void readyCatapult(int direction) {
+        robot.catapultMotor.setPower(0.25 * direction);
+        if (gamepad2.b || robot.launchButton.getState())
         {
             robot.catapultMotor.setPower(0.0);
             readyCatapultModeOn = false;
         }
     }
 
-    private void launchCatapult() {
-        robot.catapultMotor.setPower(0.5);
+    private void launchCatapult(int direction) {
+        robot.catapultMotor.setPower(0.5 * direction);
         if (needsTimerReset && !robot.launchButton.getState())
         {
             runtime.reset();
             needsTimerReset = false;
         }
-        if (runtime.seconds() > 0.2 && !needsTimerReset || gamepad2.dpad_right)
+        if (runtime.seconds() > 0.2 && !needsTimerReset || gamepad2.b)
         {
             robot.catapultMotor.setPower(0.0);
             needsTimerReset = true;
@@ -139,10 +142,25 @@ public class QBotTeleop extends OpMode{
         {
             robot.catapultMotor.setPower(catapultPower/1.8);
         }
-        robot.front_right.setPower(right);
-        robot.back_right.setPower (right);
-        robot.front_left.setPower (left);
-        robot.back_left.setPower (left);
+        if (!sniperModeOn){
+            robot.front_right.setPower(right);
+            robot.back_right.setPower (right);
+            robot.front_left.setPower (left);
+            robot.back_left.setPower (left);
+        }
+        else{
+            robot.front_right.setPower(right/3);
+            robot.back_right.setPower (right/3);
+            robot.front_left.setPower (left/3);
+            robot.back_left.setPower (left/3);
+        }
+        if (gamepad1.a){
+            sniperModeOn = true;
+        }
+        if (gamepad1.b){
+            sniperModeOn = false;
+        }
+
         // Use gamepad left & right Bumpers to open and close the claw
         /*if (gamepad2.dpad_up && !readyCatapultMode)
         {
@@ -162,23 +180,23 @@ public class QBotTeleop extends OpMode{
                 readyCatapultMode = false;
             }
         }*/
-        if (gamepad2.right_bumper)
+        if (gamepad1.right_bumper)
         {
-            robot.pusherRight.setPosition(pusherUpPos);
+            robot.pusherRight.setPosition(pusherUpRightPos);
         }
-        else if (!gamepad2.right_bumper && robot.pusherRight.getPosition() != pusherDownPos)
+        else if (!gamepad1.right_bumper && robot.pusherRight.getPosition() != pusherDownPos)
         {
             robot.pusherRight.setPosition(pusherDownPos);
         }
-        if (gamepad2.left_bumper)
+        if (gamepad1.left_bumper)
         {
-            robot.pusherLeft.setPosition(pusherUpPos);
+            robot.pusherLeft.setPosition(pusherUpLeftPos);
         }
-        else if (!gamepad2.left_bumper && robot.pusherLeft.getPosition() != pusherDownPos)
+        else if (!gamepad1.left_bumper && robot.pusherLeft.getPosition() != pusherDownPos)
         {
             robot.pusherLeft.setPosition(pusherDownPos);
         }
-        if (gamepad2.dpad_left && !delayOn)
+        if (gamepad2.x && !delayOn)
         {
             delayOn = true;
         }
@@ -206,22 +224,43 @@ public class QBotTeleop extends OpMode{
         }
         // Move both servos to new position.  Assume servos are mirror image of each other.
         robot.Qermy.setPosition(qermyOffset);
-
-        if (gamepad2.dpad_down && !readyCatapultModeOn && !launchCatapultModeOn)
+        if (gamepad2.right_bumper)
+        {
+            catapultDefaultDirection = false;
+        }
+        if (gamepad2.left_bumper)
+        {
+            catapultDefaultDirection = true;
+        }
+        if (gamepad2.a && !readyCatapultModeOn && !launchCatapultModeOn)
         {
             readyCatapultModeOn = true;
         }
-        if (gamepad2.dpad_up && !launchCatapultModeOn && !readyCatapultModeOn)
+        if (gamepad2.y && !launchCatapultModeOn && !readyCatapultModeOn)
         {
             launchCatapultModeOn = true;
         }
         if (readyCatapultModeOn)
         {
-            readyCatapult();
+            if (catapultDefaultDirection)
+            {
+                readyCatapult(1);
+            }
+            else
+            {
+                readyCatapult(-1);
+            }
         }
         if (launchCatapultModeOn)
         {
-            launchCatapult();
+            if (catapultDefaultDirection)
+            {
+                launchCatapult(1);
+            }
+            else
+            {
+                launchCatapult(-1);
+            }
         }
 
         // Send telemetry message to signify robot running;

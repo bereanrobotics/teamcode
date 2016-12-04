@@ -33,11 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,9 +64,9 @@ import com.qualcomm.robotcore.util.RobotLog;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Qbot: Red Autonomous", group="Qbot")
+@Autonomous(name="Qbot: Red/Left Autonomous", group="Qbot")
 //@Disabled
-public class QbotAutonomousTest extends LinearOpMode {
+public class QbotAutonomousRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
@@ -185,7 +183,7 @@ public class QbotAutonomousTest extends LinearOpMode {
         robot.Qermy.setPosition(0.49019608);
         sleep(1000);
     }
-    private void findColorAndSetServo(double speed, double timeout) throws InterruptedException {
+    private boolean findColorAndSetServo(double speed, double timeout) throws InterruptedException {
 
         // this logic assumes the color sensor is on the right
         pusherLeftPos = PUSHER_DOWN;
@@ -195,7 +193,8 @@ public class QbotAutonomousTest extends LinearOpMode {
         robot.drive(speed, speed);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < timeout) && pusherLeftPos == pusherRightPos) {
+        boolean found = false;
+        while (opModeIsActive() && (runtime.seconds() < timeout) && !found) {
 
             // this logic assumes the color sensor is on the right
             int color = robot.getColorNumber();
@@ -208,6 +207,7 @@ public class QbotAutonomousTest extends LinearOpMode {
                 } else {
                     pusherLeftPos = PUSHER_UP_LEFT;
                 }
+                found = true;
 
             } else if (color == SENSOR_BLUE) {
                 robot.redLED(false);
@@ -217,6 +217,7 @@ public class QbotAutonomousTest extends LinearOpMode {
                 } else {
                     pusherRightPos = PUSHER_UP_RIGHT;
                 }
+                found = true;
 
             } else {
                 robot.redLED(false);
@@ -231,6 +232,7 @@ public class QbotAutonomousTest extends LinearOpMode {
         robot.pusherLeft.setPosition(pusherLeftPos);
         robot.pusherRight.setPosition(pusherRightPos);
         sleep(50); // let servios move
+        return (found);
     }
 
     @Override
@@ -250,18 +252,24 @@ public class QbotAutonomousTest extends LinearOpMode {
             launchCatapult();
             readyCatapult();
             loadCatapult();
-            launchCatapult();
+            launchCatapult();*/
             encoderDrive(DRIVE_SPEED, -6, -6, 10); // move forward 6 inches
             encoderDrive(DRIVE_SPEED, -12.5, 12.5, 10); // Rotate approx 75°, approx 5.68° for each inch turned
             encoderDrive(DRIVE_SPEED, 84, 84, 20);
             encoderDrive(DRIVE_SPEED, 6.25, -6.25, 10); // Rotate approx 35°, approx 5.68° for each inch turned
-            encoderDrive(0.2, 8, 8, 10);*/
+            encoderDrive(0.2, 8, 8, 10);
             //check color, raise button
-            findColorAndSetServo(0.1,5.0);
-            robot.drive(0.1, 0.1);
+            /*double remaining = 6.0; // assume inches from wall
+            while (remaining > 2 && !findColorAndSetServo(0.0,0.2)) {
+                encoderDrive(0.1, 1, 1, 1);
+                remaining -= 1;
+            }
+            encoderDrive(0.1, remaining, remaining, remaining);*/
+            /*robot.drive(0.1, 0.1);
             while (opModeIsActive() && (runtime.seconds() < 1.0)) {
                 idle();
             }
+            */
             robot.drive(0, 0);
 
 

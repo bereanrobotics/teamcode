@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="AlvinisDingus", group="Aimbot")
-// @Disabled
+@Disabled
 public class AlvinIsDingus extends LinearOpMode{
 
     /* Declare OpMode members. */

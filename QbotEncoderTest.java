@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,7 +67,7 @@ import com.qualcomm.robotcore.util.RobotLog;
  */
 
 @Autonomous(name="Qbot: Encoder Test", group="Qbot")
-//@Disabled
+@Disabled
 public class QbotEncoderTest extends LinearOpMode {
 
     /* Declare OpMode members. */
