@@ -31,6 +31,7 @@ public class HardwareAimbot
     public Servo leftButtonPusher = null;
     public Servo dropper = null;
     public Servo cattleGuard = null;
+    //public LightSensor lightSensor;
 
     // magic low level access to the MR color sensor as an i2c device
     private I2cDevice colorC;
@@ -89,10 +90,10 @@ public class HardwareAimbot
         // Define and Initialize Motors
 
 
-        frontLeftMotor  = initMotor("left_front", false);
-        frontRightMotor = initMotor("right_front", true);
-        backLeftMotor   = initMotor("left_back", false);
-        backRightMotor  = initMotor("right_back", true);
+        frontLeftMotor  = initMotorWithEncoder("left_front", false);
+        frontRightMotor = initMotorWithEncoder("right_front", true);
+        backLeftMotor   = initMotorWithEncoder("left_back", false);
+        backRightMotor  = initMotorWithEncoder("right_back", true);
         //catapultMotor = initMotor("meme", true);
 
         // Define and initialize ALL installed servos.
@@ -100,12 +101,13 @@ public class HardwareAimbot
         leftButtonPusher  = initServo("left_button_push", 1.0, false);
         //dropper           = initServo("dropper", 0.0, false);
         //cattleGuard       = initServo("cattleguard", 0.0, true);
-
+        //lightSensor = hwMap.lightSensor.get("light");
         // save a reference to the core device interface to set LED lights
         cdi = hwMap.deviceInterfaceModule.get("cdi");
         initColorSensor();
 
     }
+
 
     // Power the left and right wheels as needed
     public void drive(double left, double right) {
@@ -156,4 +158,3 @@ public class HardwareAimbot
         period.reset();
     }
 }
-
