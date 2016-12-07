@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -34,6 +35,8 @@ public class HardwareQBot
     public Servo pusherLeft = null;
     public Servo pusherRight = null;
     public DigitalChannel launchButton = null;
+    public LightSensor lightSensor = null;
+
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP
@@ -78,7 +81,7 @@ public class HardwareQBot
     private Servo initServo(String name, double pos, boolean reverse) {
         Servo srv = hwMap.servo.get(name);
         if (reverse) srv.setDirection(Servo.Direction.REVERSE);
-        srv.setPosition(pos);
+        //srv.setPosition(pos);
         RobotLog.d("HardwareQbot init servo: " + name);
         return srv;
     }
@@ -113,6 +116,9 @@ public class HardwareQBot
         initColorSensor("cs");
         launchButton = hwMap.digitalChannel.get("launchButton");
         launchButton.setMode(DigitalChannelController.Mode.INPUT);
+        // get a reference to our Light Sensor object.
+        lightSensor = hwMap.opticalDistanceSensor.get("light");  // Alternative MR ODS sensor.
+        lightSensor.enableLed(true);
     }
 
     // Power the left and right wheels as needed

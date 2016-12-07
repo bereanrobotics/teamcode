@@ -92,6 +92,9 @@ public class QbotAutonomousBlueRight extends LinearOpMode {
     double pusherRightPos = PUSHER_DOWN;
     double pusherLeftPos = PUSHER_DOWN;
     Boolean blueTeam = true; // flag to determine if we are the red or blue team.
+    double ballLoaderOffset = 0.49019608;
+    double ballLoaderDefaultPos = 0.49019608;
+    double ballLoaderTargetPos = 0.07843137;
 
     private ElapsedTime runtime = new ElapsedTime();  // required for delay
 
@@ -177,11 +180,15 @@ public class QbotAutonomousBlueRight extends LinearOpMode {
     }
 
     private void loadCatapult() throws InterruptedException {
-        sleep(1000);
-        robot.Qermy.setPosition(0.07843137);
         sleep(500);
-        robot.Qermy.setPosition(0.49019608);
-        sleep(1000);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2.0) || ballLoaderOffset > ballLoaderTargetPos) {
+            ballLoaderOffset -= 0.015;
+            robot.Qermy.setPosition(ballLoaderOffset);
+        }
+        sleep(500);
+        robot.Qermy.setPosition(ballLoaderDefaultPos);
+        sleep(500);
     }
     private void findColorAndSetServo(double speed, double timeout) throws InterruptedException {
 
@@ -243,19 +250,23 @@ public class QbotAutonomousBlueRight extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-
-            /*readyCatapult();
+            sleep(10000);
+            readyCatapult();
             launchCatapult();
             readyCatapult();
             loadCatapult();
-            launchCatapult();*/
+            launchCatapult();
+            encoderDrive(.4, 7, 7, 10); // move forward 7 inches
+            encoderDrive(.4, 15.6, -15.6, 10); // Rotate approx 90°, approx 5.68° for each inch turned
+            encoderDrive(.4, -55, -55, 10);
+            /*old stuff
             encoderDrive(DRIVE_SPEED, 6, 6, 10); // move forward 6 inches
-            encoderDrive(DRIVE_SPEED, -50, 50, 10); // Rotate approx 285°, approx 5.68° for each inch turned
+            encoderDrive(DRIVE_SPEED, -18.4, 18.4, 10); // Rotate approx approx 105, 5.68° for each inch turned
             encoderDrive(DRIVE_SPEED, 84, 84, 20);
             encoderDrive(DRIVE_SPEED, -6.25, 6.25, 10); // Rotate approx 35°, approx 5.68° for each inch turned
-            encoderDrive(0.2, 8, 8, 10);
+            encoderDrive(0.2, 10, 10, 10);
             //check color, raise button
-            /*findColorAndSetServo(0.1,5.0);
+            findColorAndSetServo(0.1,5.0);
             robot.drive(0.1, 0.1);
             while (opModeIsActive() && (runtime.seconds() < 1.0)) {
                 idle();

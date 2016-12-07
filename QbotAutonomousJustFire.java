@@ -94,6 +94,9 @@ public class QbotAutonomousJustFire extends LinearOpMode {
     Boolean blueTeam = true; // flag to determine if we are the red or blue team.
 
     private ElapsedTime runtime = new ElapsedTime();  // required for delay
+    double ballLoaderOffset = 0.49019608;
+    double ballLoaderDefaultPos = 0.49019608;
+    double ballLoaderTargetPos = 0.07843137;
 
     /*\
  *  Method to perfmorm a relative move, based on encoder counts.
@@ -177,11 +180,15 @@ public class QbotAutonomousJustFire extends LinearOpMode {
     }
 
     private void loadCatapult() throws InterruptedException {
-        sleep(1000);
-        robot.Qermy.setPosition(0.07843137);
         sleep(500);
-        robot.Qermy.setPosition(0.49019608);
-        sleep(1000);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2.0) || ballLoaderOffset > ballLoaderTargetPos) {
+            ballLoaderOffset -= 0.015;
+            robot.Qermy.setPosition(ballLoaderOffset);
+        }
+        sleep(500);
+        robot.Qermy.setPosition(ballLoaderDefaultPos);
+        sleep(500);
     }
     private void findColorAndSetServo(double speed, double timeout) throws InterruptedException {
 
