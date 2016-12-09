@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -34,6 +35,7 @@ public class HardwareQBot
     public Servo pusherLeft = null;
     public Servo pusherRight = null;
     public DigitalChannel launchButton = null;
+    public ModernRoboticsI2cGyro gyro = null;
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP
@@ -111,6 +113,7 @@ public class HardwareQBot
         // save a reference to the core device interface to set LED lights
         cdi = hwMap.deviceInterfaceModule.get("cdi");
         initColorSensor("cs");
+        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("gyro");
         launchButton = hwMap.digitalChannel.get("launchButton");
         launchButton.setMode(DigitalChannelController.Mode.INPUT);
     }
