@@ -33,11 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,9 +64,9 @@ import com.qualcomm.robotcore.util.RobotLog;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Qbot: Red Autonomous", group="Qbot")
+@Autonomous(name="Qbot: Just Fire Autonomous", group="Qbot")
 //@Disabled
-public class QbotAutonomousTest extends LinearOpMode {
+public class QbotAutonomousJustFire extends LinearOpMode {
 
     /* Declare OpMode members. */
     private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
@@ -96,6 +94,9 @@ public class QbotAutonomousTest extends LinearOpMode {
     Boolean blueTeam = true; // flag to determine if we are the red or blue team.
 
     private ElapsedTime runtime = new ElapsedTime();  // required for delay
+    double ballLoaderOffset = 0.49019608;
+    double ballLoaderDefaultPos = 0.49019608;
+    double ballLoaderTargetPos = 0.07843137;
 
     /*\
  *  Method to perfmorm a relative move, based on encoder counts.
@@ -179,11 +180,15 @@ public class QbotAutonomousTest extends LinearOpMode {
     }
 
     private void loadCatapult() throws InterruptedException {
-        sleep(1000);
-        robot.Qermy.setPosition(0.07843137);
         sleep(500);
-        robot.Qermy.setPosition(0.49019608);
-        sleep(1000);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2.0) || ballLoaderOffset > ballLoaderTargetPos) {
+            ballLoaderOffset -= 0.015;
+            robot.Qermy.setPosition(ballLoaderOffset);
+        }
+        sleep(500);
+        robot.Qermy.setPosition(ballLoaderDefaultPos);
+        sleep(500);
     }
     private void findColorAndSetServo(double speed, double timeout) throws InterruptedException {
 
@@ -246,24 +251,11 @@ public class QbotAutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            /*readyCatapult();
+            readyCatapult();
             launchCatapult();
             readyCatapult();
             loadCatapult();
             launchCatapult();
-            encoderDrive(DRIVE_SPEED, -6, -6, 10); // move forward 6 inches
-            encoderDrive(DRIVE_SPEED, -12.5, 12.5, 10); // Rotate approx 75°, approx 5.68° for each inch turned
-            encoderDrive(DRIVE_SPEED, 84, 84, 20);
-            encoderDrive(DRIVE_SPEED, 6.25, -6.25, 10); // Rotate approx 35°, approx 5.68° for each inch turned
-            encoderDrive(0.2, 8, 8, 10);*/
-            //check color, raise button
-            findColorAndSetServo(0.1,5.0);
-            robot.drive(0.1, 0.1);
-            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-                idle();
-            }
-            robot.drive(0, 0);
-
 
 /*
             RobotLog.d("QbotAutonomousTest: OPMODE ACTIVE!");

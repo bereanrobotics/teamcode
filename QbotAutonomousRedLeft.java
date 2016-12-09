@@ -33,11 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,9 +64,9 @@ import com.qualcomm.robotcore.util.RobotLog;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Qbot: Red Autonomous", group="Qbot")
+@Autonomous(name="Qbot: Red/Left Autonomous", group="Qbot")
 //@Disabled
-public class QbotAutonomousTest extends LinearOpMode {
+public class QbotAutonomousRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
@@ -82,18 +80,25 @@ public class QbotAutonomousTest extends LinearOpMode {
     //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.8;
+    static final double     DRIVE_SPEED             = 0.5;
     static final double     TURN_SPEED              = 0.5;
     static final int        CATAPULT_LAUNCH_COUNT   = 435;
     static final int        SENSOR_RED     = 10;
     static final int        SENSOR_BLUE    = 3;
+    static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
+
 
     static final double     PUSHER_DOWN    = 0.0;
     static final double     PUSHER_UP_RIGHT      = 0.439;
     static final double     PUSHER_UP_LEFT      = 0.568;
     double pusherRightPos = PUSHER_DOWN;
     double pusherLeftPos = PUSHER_DOWN;
-    Boolean blueTeam = true; // flag to determine if we are the red or blue team.
+
+    Boolean blueTeam = true; // flag to determine if we are the red or blue team
+
+    double ballLoaderOffset = 0.49019608;
+    double ballLoaderDefaultPos = 0.49019608;
+    double ballLoaderTargetPos = 0.07843137;
 
     private ElapsedTime runtime = new ElapsedTime();  // required for delay
 
@@ -113,7 +118,6 @@ public class QbotAutonomousTest extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
             robot.setTargetPosition(leftInches, rightInches);
             robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.drive(speed, speed);
@@ -179,13 +183,35 @@ public class QbotAutonomousTest extends LinearOpMode {
     }
 
     private void loadCatapult() throws InterruptedException {
-        sleep(1000);
-        robot.Qermy.setPosition(0.07843137);
         sleep(500);
-        robot.Qermy.setPosition(0.49019608);
-        sleep(1000);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3.0) || ballLoaderOffset > ballLoaderTargetPos) {
+            ballLoaderOffset -= 0.01;
+            robot.Qermy.setPosition(ballLoaderOffset);
+        }
+        sleep(500);
+        robot.Qermy.setPosition(ballLoaderDefaultPos);
+        sleep(500);
     }
-    private void findColorAndSetServo(double speed, double timeout) throws InterruptedException {
+
+
+    private boolean driveToLine(double speed, double timeout)throws InterruptedException {
+        // run until the white line is seen OR the driver presses STOP;
+        robot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.drive(speed, speed);
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < timeout) && (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
+
+            // Display the light level while we are looking for the line
+            telemetry.addData("Light Level", robot.lightSensor.getLightDetected());
+            telemetry.update();
+        }
+        robot.drive(speed, speed);
+        return (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD);
+    }
+
+    private boolean findColorAndSetServo(double speed, double timeout) throws InterruptedException {
 
         // this logic assumes the color sensor is on the right
         pusherLeftPos = PUSHER_DOWN;
@@ -193,9 +219,9 @@ public class QbotAutonomousTest extends LinearOpMode {
 
         robot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.drive(speed, speed);
-
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < timeout) && pusherLeftPos == pusherRightPos) {
+        boolean found = false;
+        while (opModeIsActive() && (runtime.seconds() < timeout) && !found) {
 
             // this logic assumes the color sensor is on the right
             int color = robot.getColorNumber();
@@ -208,6 +234,7 @@ public class QbotAutonomousTest extends LinearOpMode {
                 } else {
                     pusherLeftPos = PUSHER_UP_LEFT;
                 }
+                found = true;
 
             } else if (color == SENSOR_BLUE) {
                 robot.redLED(false);
@@ -217,6 +244,7 @@ public class QbotAutonomousTest extends LinearOpMode {
                 } else {
                     pusherRightPos = PUSHER_UP_RIGHT;
                 }
+                found = true;
 
             } else {
                 robot.redLED(false);
@@ -231,6 +259,7 @@ public class QbotAutonomousTest extends LinearOpMode {
         robot.pusherLeft.setPosition(pusherLeftPos);
         robot.pusherRight.setPosition(pusherRightPos);
         sleep(50); // let servios move
+        return (found);
     }
 
     @Override
@@ -245,23 +274,33 @@ public class QbotAutonomousTest extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-
-            /*readyCatapult();
+            sleep(10000);
+            readyCatapult();
             launchCatapult();
             readyCatapult();
             loadCatapult();
             launchCatapult();
-            encoderDrive(DRIVE_SPEED, -6, -6, 10); // move forward 6 inches
-            encoderDrive(DRIVE_SPEED, -12.5, 12.5, 10); // Rotate approx 75°, approx 5.68° for each inch turned
-            encoderDrive(DRIVE_SPEED, 84, 84, 20);
-            encoderDrive(DRIVE_SPEED, 6.25, -6.25, 10); // Rotate approx 35°, approx 5.68° for each inch turned
-            encoderDrive(0.2, 8, 8, 10);*/
-            //check color, raise button
-            findColorAndSetServo(0.1,5.0);
-            robot.drive(0.1, 0.1);
+            encoderDrive(.4, -7, -7, 10); // move forward 7 inches
+            encoderDrive(.4, -16, 16, 10); // Rotate approx 90°, approx 5.68° for each inch turned
+            encoderDrive(.4, 53, 53, 10);
+            //encoderDrive(.4, -7.9, 7.9, 10); // Rotate approx 45°, approx 5.68° for each inch turned
+            //shoot, this is old stuff
+            //encoderDrive(DRIVE_SPEED, -13.2, 13.2, 10); // Rotate approx 75°, approx 5.68° for each inch turned
+            //encoderDrive(DRIVE_SPEED, 85, 85, 20);
+            //encoderDrive(0.2, 12, 12, 10);
+            //driveToLine(DRIVE_SPEED,15);
+            //encoderDrive(DRIVE_SPEED, 6.1, -6.1, 10); // Rotate approx 35°, approx 5.68° for each inch turned
+            /*double remaining = 6.0; // assume inches from wall
+            while (remaining > 2 && !findColorAndSetServo(0.0,0.2)) {
+                encoderDrive(0.1, 1, 1, 1);
+                remaining -= 1;
+            }
+            encoderDrive(0.1, remaining, remaining, remaining);*/
+            /*robot.drive(0.1, 0.1);
             while (opModeIsActive() && (runtime.seconds() < 1.0)) {
                 idle();
             }
+            */
             robot.drive(0, 0);
 
 
