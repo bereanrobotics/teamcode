@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This class can be used to define all the specific hardware for a Robot.
  *
  */
-public class HardwareQBot
+public class HardwareQ4Way
 {
 
     /* Public OpMode members. */
@@ -19,18 +19,13 @@ public class HardwareQBot
     public DcMotor rightmotor = null;
     public DcMotor frontmotor = null;
     public DcMotor backmotor = null;
-    public DcMotor motor180 = null;
-    public DcMotor motorRack = null;
-    public Servo rightglyphgrabber = null;
-    public Servo leftglyphgrabber = null;
-
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareQBot(){
+    public HardwareQ4Way(){
 
     }
 
@@ -61,12 +56,10 @@ public class HardwareQBot
         rightmotor = initMotor("rightmotor", false);
         backmotor   = initMotor("backmotor", true);
         frontmotor  = initMotor("frontmotor", false);
-        motor180  = initMotor("motor180", false);
-        motorRack  = initMotor("motorrack", false);
 
         // Define and initialize ALL installed servos.
-        rightglyphgrabber = initServo("rightglyph", 0.0, false);
-        leftglyphgrabber  = initServo("leftglyph", 1.0, false);
+       // rightButtonPusher = initServo("right_button_push", 0.0, false);
+       // leftButtonPusher  = initServo("left_button_push", 1.0, false);
         //dropper           = initServo("dropper", 0.0, false);
         //cattleGuard       = initServo("cattleguard", 0.0, true);
     }
