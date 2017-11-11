@@ -48,7 +48,7 @@ public class QBotTeleop extends OpMode{
 
     /* Declare OpMode members. */
 
-    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
+    HardwareQBotOld robot = new HardwareQBotOld(); // use the class created to define a Aimbot's hardware
     double qermyStartPos = 0.49019608;
     double qermyEndPos = 0.07843137;
     double qermyOffset = 0.49019608;

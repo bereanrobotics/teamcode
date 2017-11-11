@@ -45,8 +45,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class TeleOpGlyphArm extends OpMode{
 
+    static double CLAW_SPEED = 0.2;
+
     /* Declare OpMode members. */
-    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
+    HardwareQGlyphArm robot = new HardwareQGlyphArm(); // use the class created to define a Aimbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -82,30 +84,28 @@ public class TeleOpGlyphArm extends OpMode{
      */
     @Override
     public void loop() {
+
         double lift;
         double rack;
-        double leftglyphgrabber;
-        double rightglyphgrabber;
+        double glyphgrabber = 0;
+        //double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         lift = -gamepad1.left_stick_y;
         rack = -gamepad1.right_stick_y;
-        leftglyphgrabber = -gamepad1.left_stick_x;
-        rightglyphgrabber = -gamepad1.right_stick_x;
 
         robot.motorRack.setPower(rack);
         robot.motor180.setPower(lift);
 
-        /*
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
+            glyphgrabber += CLAW_SPEED;
         else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
-
+            glyphgrabber -= CLAW_SPEED;
+        /*
         // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftButtonPusher.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightButtonPusher.setPosition(robot.MID_SERVO - clawOffset);
+        glyphgrabber = Range.clip(glyphgrabber, -0.5, 0.5);
+        robot.leftButtonPusher.setPosition(robot.MID_SERVO + glyphgrabber);
+        robot.rightButtonPusher.setPosition(robot.MID_SERVO - glyphgrabber);
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
         if (gamepad1.y)
@@ -118,8 +118,9 @@ public class TeleOpGlyphArm extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", lift);
-        telemetry.addData("right", "%.2f", rack);
+        telemetry.addData("lift",  "%.2f", lift);
+        telemetry.addData("rack", "%.2f", rack);
+        telemetry.addData("glyph", "%.2f", glyphgrabber);
         updateTelemetry(telemetry);
     }
 

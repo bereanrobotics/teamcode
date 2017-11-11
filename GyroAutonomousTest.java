@@ -76,7 +76,7 @@ import com.qualcomm.robotcore.util.Range;
 public class GyroAutonomousTest extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareQBot robot   = new HardwareQBot();   // Use a Pushbot's hardware
+    HardwareQBotOld robot   = new HardwareQBotOld();   // Use a Pushbot's hardware
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
