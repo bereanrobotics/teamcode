@@ -56,7 +56,7 @@ public class Auto4Way extends LinearOpMode {
     HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    static double speed = 0.5;
+    private double speed = 0.5;
 
     @Override
     public void runOpMode() {
@@ -75,7 +75,7 @@ public class Auto4Way extends LinearOpMode {
         telemetry.update();
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.9)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }

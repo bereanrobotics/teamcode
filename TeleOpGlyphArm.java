@@ -45,6 +45,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class TeleOpGlyphArm extends OpMode{
 
+    public static final double POWER_FACTOR_RACK = .25;
+    public static final double POWER_FACTOR_180 = .5;
     /* Declare OpMode members. */
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
 
@@ -82,18 +84,18 @@ public class TeleOpGlyphArm extends OpMode{
      */
     @Override
     public void loop() {
-        double lift;
+        double m180;
         double rack;
         double leftglyphgrabber;
         double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        lift = -gamepad1.left_stick_y;
+        m180 = -gamepad1.left_stick_y;
         rack = -gamepad1.right_stick_y;
         leftglyphgrabber = -gamepad1.left_stick_x;
         rightglyphgrabber = -gamepad1.right_stick_x;
 
-        robot.motorRack.setPower(rack);
-        robot.motor180.setPower(lift);
+        robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
+        robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
         /*
         // Use gamepad left & right Bumpers to open and close the claw
@@ -118,8 +120,8 @@ public class TeleOpGlyphArm extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", lift);
-        telemetry.addData("right", "%.2f", rack);
+        telemetry.addData("m180",  "%.2f", m180 * POWER_FACTOR_180);
+        telemetry.addData("rack", "%.2f", rack * POWER_FACTOR_RACK);
         updateTelemetry(telemetry);
     }
 
