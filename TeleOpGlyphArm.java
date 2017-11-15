@@ -44,14 +44,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 // @Disabled
 
 public class TeleOpGlyphArm extends OpMode{
-
-<<<<<<< HEAD
+    
     public static final double POWER_FACTOR_RACK = .25;
     public static final double POWER_FACTOR_180 = .5;
-=======
     static double CLAW_SPEED = 0.2;
 
->>>>>>> 5447d65b2bd046ad7571ca3f1452daf3a5f6eb50
     /* Declare OpMode members. */
     HardwareQGlyphArm robot = new HardwareQGlyphArm(); // use the class created to define a Aimbot's hardware
 
@@ -89,12 +86,7 @@ public class TeleOpGlyphArm extends OpMode{
      */
     @Override
     public void loop() {
-<<<<<<< HEAD
         double m180;
-=======
-
-        double lift;
->>>>>>> 5447d65b2bd046ad7571ca3f1452daf3a5f6eb50
         double rack;
         double glyphgrabber = 0;
         //double rightglyphgrabber;
@@ -127,14 +119,9 @@ public class TeleOpGlyphArm extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-<<<<<<< HEAD
         telemetry.addData("m180",  "%.2f", m180 * POWER_FACTOR_180);
         telemetry.addData("rack", "%.2f", rack * POWER_FACTOR_RACK);
-=======
-        telemetry.addData("lift",  "%.2f", lift);
-        telemetry.addData("rack", "%.2f", rack);
         telemetry.addData("glyph", "%.2f", glyphgrabber);
->>>>>>> 5447d65b2bd046ad7571ca3f1452daf3a5f6eb50
         updateTelemetry(telemetry);
     }
 
