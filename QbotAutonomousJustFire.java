@@ -69,7 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class QbotAutonomousJustFire extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
+    private HardwareQBotOld robot   = new HardwareQBotOld();   // Use a qbot's hardware
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP

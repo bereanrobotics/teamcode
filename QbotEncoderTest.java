@@ -71,7 +71,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 public class QbotEncoderTest extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private HardwareQBot robot   = new HardwareQBot();   // Use a qbot's hardware
+    private HardwareQBotOld robot   = new HardwareQBotOld();   // Use a qbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28.0; // 1120 or 28? eg: AndyMark NeverRest40 Motor Encoder
