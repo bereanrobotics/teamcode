@@ -13,10 +13,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class HardwareQGlyphArm
 {
+    public static final double MID_SERVO       =  0.5 ;
 
     /* Public OpMode members. */
     public DcMotor motor180 = null;
     public DcMotor motorRack = null;
+    public Servo glyphLeft = null;
+    public Servo glyphRight = null;
     //public DcMotor frontmotor = null;
     //public DcMotor backmotor = null;
 
@@ -28,13 +31,13 @@ public class HardwareQGlyphArm
     public HardwareQGlyphArm(){
 
     }
-
     /* handle standard motor initialization */
     private DcMotor initMotor(String name, boolean reverse) {
         DcMotor motor = hwMap.dcMotor.get(name);
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior( DcMotor.ZeroPowerBehavior.BRAKE);
         return motor;
     }
 
@@ -52,11 +55,11 @@ public class HardwareQGlyphArm
         hwMap = ahwMap; // initialize before calling other init functions
 
         // Define and Initialize Motors
-        motorRack = initMotor("motorrack",true);
-       motor180 = initMotor("motor180",true);
+        motorRack = initMotor("motorrack", false);
+        motor180 = initMotor("motor180", true);
         // Define and initialize ALL installed servos.
-       // rightButtonPusher = initServo("right_button_push", 0.0, false);
-       // leftButtonPusher  = initServo("left_button_push", 1.0, false);
+        glyphLeft = initServo("glyphleft", MID_SERVO, false);
+        glyphRight = initServo("glyphright", MID_SERVO, false);
         //dropper           = initServo("dropper", 0.0, false);
         //cattleGuard       = initServo("cattleguard", 0.0, true);
     }

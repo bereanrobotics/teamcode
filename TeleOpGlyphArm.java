@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -46,6 +47,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpGlyphArm extends OpMode{
 
     static double CLAW_SPEED = 0.2;
+    static double rackSpeed = 0.3;
+    static double liftSpeed = 0.5;
+    double glyphgrabber = 0;
 
     /* Declare OpMode members. */
     HardwareQGlyphArm robot = new HardwareQGlyphArm(); // use the class created to define a Aimbot's hardware
@@ -87,20 +91,28 @@ public class TeleOpGlyphArm extends OpMode{
 
         double lift;
         double rack;
-        double glyphgrabber = 0;
+
+        final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+
         //double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         lift = -gamepad1.left_stick_y;
         rack = -gamepad1.right_stick_y;
 
-        robot.motorRack.setPower(rack);
-        robot.motor180.setPower(lift);
+        robot.motorRack.setPower(rack * rackSpeed);
+        robot.motor180.setPower(lift * liftSpeed);
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
             glyphgrabber += CLAW_SPEED;
         else if (gamepad1.left_bumper)
             glyphgrabber -= CLAW_SPEED;
+
+      // Move both servos to new position.  Assume servos are mirror image of each other.
+        glyphgrabber = Range.clip(glyphgrabber, -0.5, 0.5);
+        robot.glyphLeft.setPosition(robot.MID_SERVO + glyphgrabber);
+        robot.glyphRight.setPosition(robot.MID_SERVO - glyphgrabber);
+
         /*
         // Move both servos to new position.  Assume servos are mirror image of each other.
         glyphgrabber = Range.clip(glyphgrabber, -0.5, 0.5);
