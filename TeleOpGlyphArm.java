@@ -45,10 +45,11 @@ import com.qualcomm.robotcore.util.Range;
 // @Disabled
 
 public class TeleOpGlyphArm extends OpMode{
-
+    
+    public static final double POWER_FACTOR_RACK = .25;
+    public static final double POWER_FACTOR_180 = .5;
     static double CLAW_SPEED = 0.2;
-    static double rackSpeed = 0.3;
-    static double liftSpeed = 0.5;
+
     double glyphgrabber = 0;
 
     /* Declare OpMode members. */
@@ -88,19 +89,18 @@ public class TeleOpGlyphArm extends OpMode{
      */
     @Override
     public void loop() {
-
-        double lift;
+        double m180;
         double rack;
 
         final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
         //double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        lift = -gamepad1.left_stick_y;
+        m180 = -gamepad1.left_stick_y;
         rack = -gamepad1.right_stick_y;
 
-        robot.motorRack.setPower(rack * rackSpeed);
-        robot.motor180.setPower(lift * liftSpeed);
+        robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
+        robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
@@ -130,8 +130,8 @@ public class TeleOpGlyphArm extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("lift",  "%.2f", lift);
-        telemetry.addData("rack", "%.2f", rack);
+        telemetry.addData("m180",  "%.2f", m180 * POWER_FACTOR_180);
+        telemetry.addData("rack", "%.2f", rack * POWER_FACTOR_RACK);
         telemetry.addData("glyph", "%.2f", glyphgrabber);
         updateTelemetry(telemetry);
     }
