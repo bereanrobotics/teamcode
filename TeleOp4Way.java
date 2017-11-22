@@ -40,13 +40,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOp4Way", group="Q")
+@TeleOp(name="TeleOp4Way", group="drive")
 // @Disabled
 
 public class TeleOp4Way extends OpMode{
 
     /* Declare OpMode members. */
     HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
+    private double speedFactor = 1;
+    private boolean sniperMode = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -87,16 +89,31 @@ public class TeleOp4Way extends OpMode{
         double front;
         double back;
 
+
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         front = -gamepad1.left_stick_x;
         back = -gamepad1.right_stick_x;
 
-        robot.leftmotor.setPower(left);
-        robot.backmotor.setPower(back);
-        robot.rightmotor.setPower(right);
-        robot.frontmotor.setPower(front);
+        if (gamepad1.right_bumper)
+        {
+            sniperMode = true;
+        }
+        if (gamepad1.left_bumper)
+        {
+            sniperMode = false;
+        }
+
+        if(sniperMode)
+            speedFactor = .5;
+        else
+            speedFactor = 1;
+
+        robot.leftmotor.setPower(left * speedFactor);
+        robot.backmotor.setPower(back * speedFactor);
+        robot.rightmotor.setPower(right * speedFactor);
+        robot.frontmotor.setPower(front * speedFactor);
         /*
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
@@ -122,6 +139,7 @@ public class TeleOp4Way extends OpMode{
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("sniperMode", sniperMode);
         updateTelemetry(telemetry);
     }
 

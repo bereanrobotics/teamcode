@@ -40,11 +40,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpGlyphArm", group="Q")
+@TeleOp(name="TeleOpGlyphArm", group="glyph")
 // @Disabled
 
 public class TeleOpGlyphArm extends OpMode{
-    
+
     public static final double POWER_FACTOR_RACK = .25;
     public static final double POWER_FACTOR_180 = .5;
     static double CLAW_SPEED = 0.2;
@@ -88,7 +88,7 @@ public class TeleOpGlyphArm extends OpMode{
     public void loop() {
         double m180;
         double rack;
-        double glyphgrabber = 0;
+        double glyphGrabber = 0;
         //double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad1.left_stick_y;
@@ -99,9 +99,9 @@ public class TeleOpGlyphArm extends OpMode{
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
-            glyphgrabber += CLAW_SPEED;
+            glyphGrabber += CLAW_SPEED;
         else if (gamepad1.left_bumper)
-            glyphgrabber -= CLAW_SPEED;
+            glyphGrabber -= CLAW_SPEED;
         /*
         // Move both servos to new position.  Assume servos are mirror image of each other.
         glyphgrabber = Range.clip(glyphgrabber, -0.5, 0.5);
@@ -121,7 +121,7 @@ public class TeleOpGlyphArm extends OpMode{
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("m180",  "%.2f", m180 * POWER_FACTOR_180);
         telemetry.addData("rack", "%.2f", rack * POWER_FACTOR_RACK);
-        telemetry.addData("glyph", "%.2f", glyphgrabber);
+        telemetry.addData("glyph", "%.2f", glyphGrabber);
         updateTelemetry(telemetry);
     }
 
