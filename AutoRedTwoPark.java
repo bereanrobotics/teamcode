@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -48,9 +47,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto4Way", group="Q")
+@Autonomous(name="Red 2-PARK", group="Park")
 //@Disabled
-public class Auto4Way extends LinearOpMode {
+public class AutoRedTwoPark extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
@@ -69,22 +68,22 @@ public class Auto4Way extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        robot.leftmotor.setPower(speed);
-        robot.rightmotor.setPower(speed);
+        robot.backmotor.setPower(speed);
+        robot.frontmotor.setPower(speed);
 
         telemetry.addData("Status", "motors running");
         telemetry.update();
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        robot.leftmotor.setPower(0);
-        robot.rightmotor.setPower(0);
+        robot.backmotor.setPower(0);
+        robot.frontmotor.setPower(0);
 
-        robot.frontmotor.setPower(speed);
-        robot.backmotor.setPower(speed);
+        robot.rightmotor.setPower(-speed);
+        robot.leftmotor.setPower(-speed);
 
         telemetry.addData("Status", "motors running");
         telemetry.update();
@@ -96,8 +95,8 @@ public class Auto4Way extends LinearOpMode {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        robot.frontmotor.setPower(0);
-        robot.backmotor.setPower(0);
+        robot.rightmotor.setPower(0);
+        robot.leftmotor.setPower(0);
 
     }
 }

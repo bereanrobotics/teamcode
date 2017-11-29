@@ -72,7 +72,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="Gyro Autonomous Test", group="Qbot")
-//@Disabled
+@Disabled
 public class GyroAutonomousTest extends LinearOpMode {
 
     /* Declare OpMode members. */

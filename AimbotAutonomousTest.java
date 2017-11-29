@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.RobotLog;
  */
 
 @Autonomous(name="Aimbot - Autonomous Test", group="Aimbot")
-// @Disabled
+@Disabled
 public class AimbotAutonomousTest extends LinearOpMode {
 
 

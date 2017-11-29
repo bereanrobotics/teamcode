@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpQbot", group="drive")
+@TeleOp(name="TeleOpQbot", group="Q")
 // @Disabled
 
 public class TeleOpQbot extends OpMode{

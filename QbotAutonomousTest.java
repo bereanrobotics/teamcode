@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.util.RobotLog;
  */
 
 @Autonomous(name="Qbot: Red Autonomous", group="Qbot")
-//@Disabled
+@Disabled
 public class QbotAutonomousTest extends LinearOpMode {
 
     /* Declare OpMode members. */

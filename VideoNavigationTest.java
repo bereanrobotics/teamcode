@@ -84,7 +84,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
+@Autonomous(name="Concept: Vuforia Navigation", group ="Test")
 @Disabled
 public class VideoNavigationTest extends LinearOpMode {
 
