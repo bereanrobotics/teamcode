@@ -41,19 +41,21 @@ import com.qualcomm.robotcore.util.Range;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpGlyphArm", group="glyph")
+@TeleOp(name="TeleOpQbot", group="drive")
 // @Disabled
 
-public class TeleOpGlyphArm extends OpMode{
-
-    public static final double POWER_FACTOR_RACK = .25;
-    public static final double POWER_FACTOR_180 = .5;
-    static double CLAW_SPEED = 0.2;
-
-    double glyphgrabber = 0;
+public class TeleOpQbot extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareQGlyphArm robot = new HardwareQGlyphArm(); // use the class created to define a Aimbot's hardware
+    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
+    private double speedFactor = 1;
+    private boolean sniperMode = false;
+
+    public static final double POWER_FACTOR_RACK = .25;
+    public static final double POWER_FACTOR_180 = 1;
+    static double CLAW_SPEED = 0.2;
+
+    double glyphGrabber = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -89,51 +91,65 @@ public class TeleOpGlyphArm extends OpMode{
      */
     @Override
     public void loop() {
+        double left;
+        double right;
+        double front;
+        double back;
         double m180;
         double rack;
-        double glyphGrabber = 0;
+
         final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
-        //double rightglyphgrabber;
+
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        m180 = -gamepad1.left_stick_y;
-        rack = -gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
+        front = -gamepad1.left_stick_x;
+        back = -gamepad1.right_stick_x;
+
+        if (gamepad1.y)
+        {
+            sniperMode = true;
+        }
+        if (gamepad1.x)
+        {
+            sniperMode = false;
+        }
+
+        if(sniperMode)
+            speedFactor = .5;
+        else
+            speedFactor = 1;
+
+        robot.leftmotor.setPower(left * speedFactor);
+        robot.backmotor.setPower(back * speedFactor);
+        robot.rightmotor.setPower(right * speedFactor);
+        robot.frontmotor.setPower(front * speedFactor);
+
+        //note: The joystick goes negative when pushed forwards, so negate it)
+        m180 = -gamepad2.left_stick_y;
+        rack = -gamepad2.right_stick_y;
 
         robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
         robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+        if (gamepad2.right_bumper)
             glyphGrabber += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad2.left_bumper)
             glyphGrabber -= CLAW_SPEED;
 
-      // Move both servos to new position.  Assume servos are mirror image of each other.
+        // Move both servos to new position.  Assume servos are mirror image of each other.
         glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
         robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
         robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
 
-        /*
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphgrabber = Range.clip(glyphgrabber, -0.5, 0.5);
-        robot.leftButtonPusher.setPosition(robot.MID_SERVO + glyphgrabber);
-        robot.rightButtonPusher.setPosition(robot.MID_SERVO - glyphgrabber);
-
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.armMotor.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-        else
-            robot.armMotor.setPower(0.0);
-        */
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("m180",  "%.2f", m180 * POWER_FACTOR_180);
-        telemetry.addData("rack", "%.2f", rack * POWER_FACTOR_RACK);
-        telemetry.addData("glyph", "%.2f", glyphGrabber);
-        updateTelemetry(telemetry);
+        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("right", "%.2f", right);
+
     }
 
     /*

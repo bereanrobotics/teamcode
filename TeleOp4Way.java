@@ -139,8 +139,7 @@ public class TeleOp4Way extends OpMode{
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("sniperMode", sniperMode);
-        updateTelemetry(telemetry);
+
     }
 
     /*

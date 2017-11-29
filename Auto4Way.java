@@ -57,6 +57,7 @@ public class Auto4Way extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private double speed = 0.5;
+    private double time = 0.6;
 
     @Override
     public void runOpMode() {
@@ -75,11 +76,28 @@ public class Auto4Way extends LinearOpMode {
         telemetry.update();
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-        while (opModeIsActive() && (runtime.seconds() < 1.9)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.leftmotor.setPower(0);
         robot.rightmotor.setPower(0);
+
+        robot.frontmotor.setPower(speed);
+        robot.backmotor.setPower(speed);
+
+        telemetry.addData("Status", "motors running");
+        telemetry.update();
+
+        runtime.reset();
+
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+        while (opModeIsActive() && (runtime.seconds() < time)) {
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.frontmotor.setPower(0);
+        robot.backmotor.setPower(0);
+
     }
 }

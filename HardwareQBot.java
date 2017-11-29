@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class HardwareQBot
 {
+    public static final double MID_SERVO       =  0.5 ;
 
     /* Public OpMode members. */
     public DcMotor leftmotor = null;
@@ -21,8 +22,8 @@ public class HardwareQBot
     public DcMotor backmotor = null;
     public DcMotor motor180 = null;
     public DcMotor motorRack = null;
-    public Servo rightglyphgrabber = null;
-    public Servo leftglyphgrabber = null;
+    public Servo glyphLeft = null;
+    public Servo glyphRight = null;
 
 
     /* local OpMode members. */
@@ -61,14 +62,11 @@ public class HardwareQBot
         rightmotor = initMotor("rightmotor", false);
         backmotor   = initMotor("backmotor", true);
         frontmotor  = initMotor("frontmotor", false);
-        motor180  = initMotor("motor180", false);
-        motorRack  = initMotor("motorrack", false);
-
+        motorRack = initMotor("motorrack", false);
+        motor180 = initMotor("motor180", true);
         // Define and initialize ALL installed servos.
-        rightglyphgrabber = initServo("rightglyph", 0.0, false);
-        leftglyphgrabber  = initServo("leftglyph", 1.0, false);
-        //dropper           = initServo("dropper", 0.0, false);
-        //cattleGuard       = initServo("cattleguard", 0.0, true);
+        glyphLeft = initServo("glyphleft", MID_SERVO, false);
+        glyphRight = initServo("glyphright", MID_SERVO, false);
     }
 
     /***
