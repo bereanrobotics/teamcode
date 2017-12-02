@@ -14,6 +14,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareQBot
 {
     public static final double MID_SERVO       =  0.5 ;
+    public static final int LEFT = 1;
+    public static final int RIGHT = 2;
+    public static final int FORWARD_LEFT = 3;
+    public static final int FORWARD_RIGHT = 4;
+    public static final int BACKWARD_LEFT = 5;
+    public static final int BACKWARD_RIGHT = 6;
+    public static final int FORWARD = 7;
+    public static final int BACKWARD = 8;
 
     /* Public OpMode members. */
     public DcMotor leftmotor = null;

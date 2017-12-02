@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AutoBlueOneParkDiag extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
+    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private double speed = 0.25;
@@ -74,9 +74,13 @@ public class AutoBlueOneParkDiag extends LinearOpMode {
         telemetry.update();
         robot.init(hardwareMap);
 
+        //glyph( 0 );
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        //glyph( 0.5 );
+        //rack( 0.3, 0.3 );
 
         diagonal(FORWARD_RIGHT, 2.4);
         pauseRobot(.5);
@@ -182,6 +186,8 @@ public class AutoBlueOneParkDiag extends LinearOpMode {
 
         if (direction == FORWARD)
         {
+
+            telemetry.addData("Status", "driving straight");
             robot.backmotor.setPower(0);
             robot.frontmotor.setPower(0);
             robot.rightmotor.setPower(speed);
@@ -197,9 +203,39 @@ public class AutoBlueOneParkDiag extends LinearOpMode {
         }
 
         while (opModeIsActive() && ((runtime.seconds()-startTime) < straightTime))
+        {   telemetry.update();
+        }
+    }
+
+    private void glyph ( double position )
+    {
+        robot.glyphLeft.setPosition(robot.MID_SERVO + position);
+        robot.glyphRight.setPosition(robot.MID_SERVO - position);
+    }
+
+    private void rack( double power, double time )
+    {
+        double startTime = runtime.seconds();
+
+        robot.motorRack.setPower( power);
+        while (opModeIsActive() && ((runtime.seconds()-startTime) < time))
         {
-            telemetry.addData("Status", "driving straight");
+            telemetry.addData("Status", "rack");
             telemetry.update();
         }
+        robot.motorRack.setPower( 0 );
+    }
+
+    private void m180( double power, double time )
+    {
+        double startTime = runtime.seconds();
+
+        robot.motor180.setPower( power);
+        while (opModeIsActive() && ((runtime.seconds()-startTime) < time))
+        {
+            telemetry.addData("Status", "rack");
+            telemetry.update();
+        }
+        robot.motor180.setPower( 0 );
     }
 }
