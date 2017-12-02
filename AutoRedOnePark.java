@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -49,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="Red 1-PARK", group="Park")
-//@Disabled
+@Disabled
 public class AutoRedOnePark extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -32,21 +32,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides  Telop driving for Aimbot.
  */
 
 @TeleOp(name="TeleOp4Way", group="drive")
-// @Disabled
+@Disabled
 
 public class TeleOp4Way extends OpMode{
 
     /* Declare OpMode members. */
     HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
+
     private double speedFactor = 1;
     private boolean sniperMode = false;
 
@@ -141,6 +143,7 @@ public class TeleOp4Way extends OpMode{
         telemetry.addData("right", "%.2f", right);
 
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP

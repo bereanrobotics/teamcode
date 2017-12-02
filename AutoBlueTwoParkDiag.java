@@ -47,9 +47,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BLUE ONE: PARK", group="FINAL")
+@Autonomous(name="BLUE TWO: PARK", group="FINAL")
 //@Disabled
-public class AutoBlueOneParkDiag extends LinearOpMode {
+public class AutoBlueTwoParkDiag extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareQ4Way robot = new HardwareQ4Way(); // use the class created to define a Aimbot's hardware
@@ -78,11 +78,12 @@ public class AutoBlueOneParkDiag extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        diagonal(FORWARD_RIGHT, 2.4);
+        diagonal(FORWARD_RIGHT, 2.3);
         pauseRobot(.5);
-        rotateRobot(LEFT, .6);
+        diagonal(BACKWARD_RIGHT,1.0);
         pauseRobot(.5);
-        straight(FORWARD, 1.2);
+        rotateRobot(RIGHT,.5);
+
         pauseRobot(.5);
 
         robot.backmotor.setPower(0);
