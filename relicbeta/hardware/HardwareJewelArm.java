@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.relicbeta.hardware;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,9 +14,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareJewelArm
 {
     public static final double MID_SERVO       =  0.5 ;
+    public static final int LEFT = 1;
+    public static final int RIGHT = 2;
+    public static final int BLUE = 100;
+    public static final int RED = 200;
 
     /* Public OpMode members. */
     public Servo jewelArmLift = null;
+    public ColorSensor jewelSensor = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -41,6 +47,8 @@ public class HardwareJewelArm
 
         // Define and initialize ALL installed servos.
         jewelArmLift = initServo("arm", MID_SERVO, false);
+        // don't forget to init the color sensor
+        // jew
 
     }
 
@@ -63,6 +71,24 @@ public class HardwareJewelArm
 
         // Reset the cycle clock for the next pass.
         period.reset();
+    }
+
+    public void deploy()
+    {
+        jewelArmLift.setPosition(.5);
+    }
+
+    public void retract()
+    {
+        jewelArmLift.setPosition(0.0);
+    }
+
+    public int getDirectionToHitJewel(int teamColor)
+    {
+        //get sensor color
+        // if sensor color == team color
+                return LEFT;
+        // else return right;
     }
 }
 
