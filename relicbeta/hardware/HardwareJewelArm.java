@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.relicbeta.hardware;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,6 +17,7 @@ public class HardwareJewelArm
 
     /* Public OpMode members. */
     public Servo jewelArmLift = null;
+    public ColorSensor sensorColor = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -34,6 +36,7 @@ public class HardwareJewelArm
         return srv;
     }
 
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
@@ -41,6 +44,7 @@ public class HardwareJewelArm
 
         // Define and initialize ALL installed servos.
         jewelArmLift = initServo("arm", MID_SERVO, false);
+        sensorColor = hwMap.get(ColorSensor.class, "color");
 
     }
 
