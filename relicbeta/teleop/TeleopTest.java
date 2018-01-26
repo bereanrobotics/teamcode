@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode.relicbeta.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
@@ -43,7 +44,7 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpMcWheel", group="test")
+@TeleOp(name="TeleOpStrafe", group="test")
 // @Disabled
 
 public class TeleopTest extends OpMode{
@@ -86,7 +87,15 @@ public class TeleopTest extends OpMode{
      */
     @Override
     public void start() {
+
+        robot.backmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.frontmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.leftmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.rightmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
+
+
+
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -103,82 +112,74 @@ public class TeleopTest extends OpMode{
         front = 0;
         back = 0;
 
+
         if (gamepad1.dpad_up)
         {
-            /* strafe forward: Right and Left drive forward
-            back drive right
-            left drive left
-             */
+
             left = maxWheelSpeed;
             right= maxWheelSpeed;
-            back = -maxWheelSpeed;// negative means right
-            front = maxWheelSpeed; // positive means left
+            back = 0;
+            front = 0;
         }
 
         if (gamepad1.dpad_down)
         {
-            /* strafe backward: Right and Left drive backward
-            back drive left
-            left drive right
-             */
+
+
             left = -maxWheelSpeed;
             right= -maxWheelSpeed;
-            back = maxWheelSpeed;// negative means right
-            front = -maxWheelSpeed; // positive means left
+            back = 0;
+            front = 0;
         }
 
         if (gamepad1.dpad_left)
         {
-            /* strafe left: Front and Back drive left
-            left drive forward
-            right drive back
-             */
-            left = maxWheelSpeed;
-            right= -maxWheelSpeed;
-            back = maxWheelSpeed;// negative means right
-            front = maxWheelSpeed; // positive means left
+
+            left = 0;
+            right= 0;
+            back = -maxWheelSpeed;
+            front = -maxWheelSpeed;
         }
         if (gamepad1.dpad_right)
         {
-            /* strafe right: Front and Back drive right
-            left drive back
-            right drive forward
-             */
-            left = -maxWheelSpeed;
-            right= maxWheelSpeed;
-            back = -maxWheelSpeed;// negative means right
-            front = -maxWheelSpeed; // positive means left
+
+
+            left = 0;
+            right= 0;
+            back = maxWheelSpeed;// negative means right
+            front = maxWheelSpeed; // positive means left
         }
 
         if (gamepad1.left_bumper)
         {
-            /* rotate left
-            left drives backward
-            right drives forward
-            back drives right
-            front drives left
-             */
+
             left = -maxWheelSpeed;
             right= maxWheelSpeed;
-            back = -maxWheelSpeed;// negative means right
-            front = maxWheelSpeed; // positive means left
+            back = maxWheelSpeed;
+            front = -maxWheelSpeed;
         }
         if (gamepad1.right_bumper)
         {
-            /* rotate right
-            left drives forward
-            right drives backward
-            back drives left
-            front drives right
-             */
+
             left = maxWheelSpeed;
             right= -maxWheelSpeed;
-            back = maxWheelSpeed;// negative means right
-            front = -maxWheelSpeed; // positive means left (I think)
+            back = -maxWheelSpeed;
+            front = maxWheelSpeed;
         }
 
-        if (gamepad1.y)
+        if (gamepad1.right_stick_button)
         {
+
+            speedFactor = -1;
+
+        }
+        if (gamepad1.left_stick_button)
+        {
+
+            speedFactor = 1;
+
+        }
+v
             sniperMode = true;
         }
         if (gamepad1.x)
