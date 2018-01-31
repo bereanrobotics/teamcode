@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BLUE ONE: PARK JEWEL", group="FINAL")
+@Autonomous(name="BLUE ONE:PARKJEWEL", group="FINAL")
 //@Disabled
 public class AutoBlueOneParkDiagJewel extends LinearOpMode {
 
@@ -61,61 +61,176 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private double speed = 0.25;
-    public static final int BLUE = 94;
-    //public static final int RED  = 49;
-
-    int teamColor;
+    private int directionRotated;
+    private int directionToDrive;
+    public static final int BLUE  = 94;
+    public static final int RED   = 49;
+    public static final int ONE   = 1;
+    public static final int TWO   = 2;
+    public static final int THREE = 3;
+    private int teamColor;
+    private int teamPosition;
+    private int positionNumber;
 
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
         jArm.init(hardwareMap);
+        robot.glyphLeft.setPosition(0);
+        robot.glyphRight.setPosition(1);
+
+        telemetry.addData("Status", "1");
 
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
+        sleep(1000);
         telemetry.addData("Servo Position", jArm.jewelArmLift.getPosition());
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        //getTeamColor();
         teamColor = BLUE;
+        teamPosition = ONE;
+
+        positionNumber = getPostionNo();
+        positionNumber = ONE; //delete this line once vuforia works
+        robot.glyphLeft.setPosition(1);
+        robot.glyphRight.setPosition(0);
+        robot.motor180.setPower(.5);
+
 
         knockJewel();
+        pauseRobot(1);
 
+        telemetry.addData("Status", "2");
+        telemetry.update();
+
+        getDirectionDrive(directionRotated);
+        diagonal(directionToDrive, 2.2); //2.2 is an estimate
+        pauseRobot(1);
+
+        telemetry.addData("Status", "3");
+        telemetry.update();
+
+        parallel(); //makes robot parallel to the glyph case
+        delivierBlock();
+        straight(robot.FORWARD, 1.2); // add code afterwards to lower the arm into the slot
+
+        /*
         diagonal(robot.FORWARD_RIGHT, 2.4);
         pauseRobot(.5);
         rotateRobot(robot.LEFT, .6);
         pauseRobot(.5);
         straight(robot.FORWARD, 1.2);
-        pauseRobot(.5);
+        pauseRobot(.5);*/
 
         stopMoving();
     }
 
     private void knockJewel ()
     {
-        if (teamColor == BLUE)
-        {
-            jArm.jewelArmLift.setPosition(1);
-            sleep(600);
-            if ((jArm.sensorColor.blue()> 128)&&(jArm.sensorColor.red() < 126)) //knock of red
+        int jewelColor;
+
+            jArm.deploy();
+            pauseRobot(2);
+            //sleep(2000);
+
+            jewelColor = getColor();
+
+            if (teamColor != jewelColor) //looking at my jewel, so knock right
             {
-                rotateRobot(robot.RIGHT, .6);
-                rotateRobot(robot.LEFT, .6);
+                rotateRobot(robot.RIGHT, .5);
+                directionRotated = robot.RIGHT;
+
             } else
             {
-
-            rotateRobot(robot.LEFT, .6);
-            rotateRobot(robot.RIGHT, .6);
+                rotateRobot(robot.LEFT, .5);
+                directionRotated = robot.LEFT;
             }
 
-            jArm.jewelArmLift.setPosition(.5);
-        }
+            jArm.retract();
 
+
+    }
+
+    private void parallel ()
+    {
+        if (((directionRotated == robot.RIGHT) && (teamPosition == ONE)) || ((directionRotated == robot.LEFT) && (teamPosition == TWO)))
+        {
+            rotateRobot(robot.RIGHT, 1.5);
+        } else
+        {
+            rotateRobot(robot.LEFT, 1.5);
+        }
+    }
+
+    private void delivierBlock ()
+    {
+        if (teamColor == RED)
+        {
+            straight(robot.LEFT, .2); //.2 is an estimate
+            if (positionNumber == TWO)
+            {
+                straight(robot.LEFT, .4); //.4 is an estimate
+            }
+            if (positionNumber == THREE)
+            {
+                straight(robot.LEFT, .4);
+            }
+        } else
+        {
+            straight(robot.RIGHT, .2);
+            if (positionNumber == TWO)
+            {
+                straight(robot.RIGHT, .4);
+            }
+            if (positionNumber == THREE)
+            {
+                straight(robot.RIGHT, .4);
+            }
+        }
+        straight(robot.FORWARD, 1.2); // add code afterwards to lower the arm into the slot
+    }
+
+    private int getPostionNo ()
+    {
+        return TWO;
+    }
+
+    private int getColor()
+    {
+        int blueValue;
+        int redValue;
+
+        blueValue = jArm.sensorColor.blue();
+        redValue = jArm.sensorColor.red();
+        telemetry.addData("Blue", blueValue);
+        telemetry.addData("Red", redValue);
+        telemetry.update();
+        if(blueValue > redValue)
+            return BLUE;
+        else return RED;
+    }
+
+    private void getDirectionDrive(int directionRotate)
+    {
+        if (teamColor == RED) {
+            if (directionRotate == robot.RIGHT) {
+                directionToDrive = robot.FORWARD_RIGHT;
+            } else {
+                directionToDrive = robot.BACKWARD_RIGHT;
+            }
+        } else if (teamColor == BLUE)
+        {
+            if (directionRotate != robot.RIGHT) {
+                directionToDrive = robot.BACKWARD_LEFT;
+            } else {
+                directionToDrive = robot.FORWARD_LEFT;
+            }
+        }
     }
 
     private void pauseRobot(double pauseSeconds)

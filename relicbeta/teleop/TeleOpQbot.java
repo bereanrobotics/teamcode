@@ -55,7 +55,7 @@ public class TeleOpQbot extends OpMode{
 
     public static final double POWER_FACTOR_RACK = .25;
     public static final double POWER_FACTOR_180 = 1;
-    static double CLAW_SPEED = 0.2;
+    static double CLAW_SPEED = 0.4;
 
     double glyphGrabber = 0;
 
@@ -100,7 +100,7 @@ public class TeleOpQbot extends OpMode{
         double m180;
         double rack;
 
-        final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+        final double    CLAW_SPEED  = 0.06 ;                 // sets rate to move servo
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)

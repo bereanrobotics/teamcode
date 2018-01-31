@@ -36,7 +36,7 @@ public class HardwareJewelArm
     private Servo initServo(String name, double pos, boolean reverse) {
         Servo srv = hwMap.servo.get(name);
         if (reverse) srv.setDirection(Servo.Direction.REVERSE);
-        srv.setPosition(pos);
+        //srv.setPosition(pos);
         return srv;
     }
 
@@ -74,12 +74,12 @@ public class HardwareJewelArm
 
     public void deploy()
     {
-        jewelArmLift.setPosition(.5);
+        jewelArmLift.setPosition(1);
     }
 
     public void retract()
     {
-        jewelArmLift.setPosition(0.0);
+        jewelArmLift.setPosition(0);
     }
 
     public int getDirectionToHitJewel(int teamColor)
