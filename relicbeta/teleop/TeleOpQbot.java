@@ -141,11 +141,16 @@ public class TeleOpQbot extends OpMode{
         else if (gamepad2.left_bumper)
             glyphGrabber -= CLAW_SPEED;
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
-        robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
-        robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
-
+        if (gamepad2.x) {
+            robot.glyphLeft.setPosition(0.5);
+            robot.glyphRight.setPosition(-0.5);
+        }
+        else {
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
+            robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
+            robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
+        }
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
