@@ -52,6 +52,7 @@ public class TeleOpQbot extends OpMode{
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
     private double speedFactor = 1;
     private boolean sniperMode = false;
+    private double maxWheelSpeed = 0.80;
 
     public static final double POWER_FACTOR_RACK = .25;
     public static final double POWER_FACTOR_180 = 1;
@@ -109,6 +110,72 @@ public class TeleOpQbot extends OpMode{
         front = -gamepad1.left_stick_x;
         back = -gamepad1.right_stick_x;
 
+        if (gamepad1.dpad_up)
+        {
+
+            left = maxWheelSpeed;
+            right= maxWheelSpeed;
+            back = 0;
+            front = 0;
+        }
+
+        if (gamepad1.dpad_down)
+        {
+
+
+            left = -maxWheelSpeed;
+            right= -maxWheelSpeed;
+            back = 0;
+            front = 0;
+        }
+
+        if (gamepad1.dpad_left)
+        {
+
+            left = 0;
+            right= 0;
+            back = -maxWheelSpeed;
+            front = -maxWheelSpeed;
+        }
+        if (gamepad1.dpad_right)
+        {
+
+
+            left = 0;
+            right= 0;
+            back = maxWheelSpeed;// negative means right
+            front = maxWheelSpeed; // positive means left
+        }
+
+        if (gamepad1.left_bumper)
+        {
+
+            left = -maxWheelSpeed;
+            right= maxWheelSpeed;
+            back = maxWheelSpeed;
+            front = -maxWheelSpeed;
+        }
+        if (gamepad1.right_bumper)
+        {
+
+            left = maxWheelSpeed;
+            right= -maxWheelSpeed;
+            back = -maxWheelSpeed;
+            front = maxWheelSpeed;
+        }
+
+        if (gamepad1.right_stick_button)
+        {
+
+            speedFactor = -1;
+
+        }
+        if (gamepad1.left_stick_button)
+        {
+
+            speedFactor = 1;
+
+        }
         if (gamepad1.y)
         {
             sniperMode = true;
@@ -142,8 +209,8 @@ public class TeleOpQbot extends OpMode{
             glyphGrabber -= CLAW_SPEED;
 
         if (gamepad2.x) {
-            robot.glyphLeft.setPosition(0.5);
-            robot.glyphRight.setPosition(-0.5);
+            robot.glyphLeft.setPosition(-0.5);
+            robot.glyphRight.setPosition(0.5);
         }
         else {
             // Move both servos to new position.  Assume servos are mirror image of each other.
