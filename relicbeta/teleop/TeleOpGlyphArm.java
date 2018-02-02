@@ -96,6 +96,8 @@ public class TeleOpGlyphArm extends OpMode{
         double rack;
         double glyphGrabber = 0;
         final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+        private double speedFactor = 1;
+        private boolean sniperMode = false;
 
         //double rightglyphgrabber;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -105,14 +107,26 @@ public class TeleOpGlyphArm extends OpMode{
         robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
         robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
+        if (gamepad1.y) {
+            sniperMode = true;
+        }
+        if (gamepad1.x) {
+            sniperMode = false;
+        }
+
+        if(sniperMode)
+            speedFactor = .5;
+        else
+            speedFactor = 1;
+
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
-            glyphGrabber += CLAW_SPEED;
+            glyphGrabber += CLAW_SPEED * speedFactor;
         else if (gamepad1.left_bumper)
-            glyphGrabber -= CLAW_SPEED;
+            glyphGrabber -= CLAW_SPEED * speedFactor;
 
-      // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
+        // Move both servos to new position.  Assume servos are mirror image of each other.
+        glyphGrabber = Range.clip(glyphGrabber, -0.5 * speedFactor, 0.5 * speedFactor);
         robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
         robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
 
