@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
@@ -51,9 +50,9 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BLUE ONE:PARKJEWEL", group="FINAL")
+@Autonomous(name="RED TWO:PARKJEWEL", group="FINAL")
 //@Disabled
-public class AutoBlueOneParkDiagJewel extends LinearOpMode {
+public class AutoRedTwoParkDiagJewel extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareQBot robot    = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -92,8 +91,8 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        teamColor = BLUE;
-        teamPosition = ONE;
+        teamColor = RED;
+        teamPosition = TWO;
 
         positionNumber = getPostionNo();
         positionNumber = ONE; //delete this line once vuforia works
