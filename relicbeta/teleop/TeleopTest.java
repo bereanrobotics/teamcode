@@ -179,23 +179,11 @@ public class TeleopTest extends OpMode{
             speedFactor = 1;
 
         }
-v
-            sniperMode = true;
-        }
-        if (gamepad1.x)
-        {
-            sniperMode = false;
-        }
 
-        if(sniperMode)
-            speedFactor = .5;
-        else
-            speedFactor = 1;
-
-        robot.leftmotor.setPower(left * speedFactor);
-        robot.backmotor.setPower(back * speedFactor);
-        robot.rightmotor.setPower(right * speedFactor);
-        robot.frontmotor.setPower(front * speedFactor);
+        robot.leftmotor.setPower(left);
+        robot.backmotor.setPower(back);
+        robot.rightmotor.setPower(right);
+        robot.frontmotor.setPower(front);
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
