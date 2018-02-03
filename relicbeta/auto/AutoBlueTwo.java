@@ -215,9 +215,12 @@ public class AutoBlueTwo extends LinearOpMode {
         telemetry.addData("Blue", blueValue);
         telemetry.addData("Red", redValue);
         telemetry.update();
-        if(blueValue > redValue)
+        if (blueValue > redValue) {
             return BLUE;
-        else return RED;
+        }
+        else {
+            return RED;
+        }
     }
 
     private void getDirectionDrive(int directionRotate)
