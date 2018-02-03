@@ -99,9 +99,9 @@ public class TeleOpQbot extends OpMode{
         double front;
         double back;
         double m180;
-        double rack;
+        //double rack;
 
-        final double    CLAW_SPEED  = 0.06 ;                 // sets rate to move servo
+        final double    CLAW_SPEED  = 0.04 ;                 // sets rate to move servo
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -197,9 +197,9 @@ public class TeleOpQbot extends OpMode{
 
         //note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad2.left_stick_y;
-        rack = -gamepad2.right_stick_y;
+        //rack = -gamepad2.right_stick_y;
 
-        robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
+        //robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
         robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
         // Use gamepad left & right Bumpers to open and close the claw
@@ -223,7 +223,9 @@ public class TeleOpQbot extends OpMode{
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-
+        telemetry.addData("glyph", "%.2f", glyphGrabber);
+        telemetry.addData("arm", "%.2f", m180);
+        telemetry.update();
     }
 
     /*

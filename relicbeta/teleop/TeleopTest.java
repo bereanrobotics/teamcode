@@ -107,6 +107,7 @@ public class TeleopTest extends OpMode{
         double front;
         double back;
 
+        /*
         left = 0;
         right = 0;
         front = 0;
@@ -192,6 +193,7 @@ public class TeleopTest extends OpMode{
         telemetry.addData("back", "%.2f", back);
         telemetry.addData("front", "%.2f", front);
 
+*/
     }
 
     /*

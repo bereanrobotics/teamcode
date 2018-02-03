@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
@@ -51,9 +50,9 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BLUE ONE:PARKJEWEL", group="FINAL")
+@Autonomous(name="BLUE ONE: theta", group="FINAL")
 //@Disabled
-public class AutoBlueOneParkDiagJewel extends LinearOpMode {
+public class AutoBlueOne extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareQBot robot    = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -144,12 +143,12 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
 
             if (teamColor != jewelColor) //looking at my jewel, so knock right
             {
-                rotateRobot(robot.RIGHT, .45);
+                rotateRobot(robot.RIGHT, robot.turnRotate);
                 directionRotated = robot.RIGHT;
 
             } else
             {
-                rotateRobot(robot.LEFT, .45);
+                rotateRobot(robot.LEFT, robot.turnRotate);
                 directionRotated = robot.LEFT;
             }
 
@@ -162,10 +161,10 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
     {
         if (((directionRotated == robot.RIGHT) && (teamPosition == ONE)) || ((directionRotated == robot.LEFT) && (teamPosition == TWO)))
         {
-            rotateRobot(robot.RIGHT, 1.3);
+            rotateRobot(robot.RIGHT, robot.turnParallel);
         } else
         {
-            rotateRobot(robot.LEFT, 1.3);
+            rotateRobot(robot.LEFT, robot.turnParallel);
         }
     }
 
@@ -194,12 +193,12 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
                 straight(robot.RIGHT, .4);
             }
         }
-        straight(robot.FORWARD, .4); // add code afterwards to lower the arm into the slot
+        straight(robot.FORWARD, robot.driveOut); // add code afterwards to lower the arm into the slot
     }
 
     private int getPostionNo ()
     {
-        return TWO;
+        return THREE;
     }
 
     private int getColor()
@@ -212,12 +211,9 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
         telemetry.addData("Blue", blueValue);
         telemetry.addData("Red", redValue);
         telemetry.update();
-        if (blueValue > redValue) {
+        if(blueValue > redValue)
             return BLUE;
-        }
-        else {
-            return RED;
-        }
+        else return RED;
     }
 
     private void getDirectionDrive(int directionRotate)
