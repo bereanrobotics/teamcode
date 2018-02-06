@@ -29,9 +29,12 @@
 
 package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
@@ -136,10 +139,12 @@ public class AutoBlueTwo extends LinearOpMode {
         int jewelColor;
 
             jArm.deploy();
-            pauseRobot(2);
+            pauseRobot(4);
             //sleep(2000);
 
             jewelColor = getColor();
+
+            // we should use robotlog to write what it finds to the log for post tournament eval
 
             if (teamColor != jewelColor) //looking at my jewel, so knock right
             {

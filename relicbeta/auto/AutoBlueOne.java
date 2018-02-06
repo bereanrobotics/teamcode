@@ -136,7 +136,7 @@ public class AutoBlueOne extends LinearOpMode {
         int jewelColor;
 
             jArm.deploy();
-            pauseRobot(2);
+            pauseRobot(4);
             //sleep(2000);
 
             jewelColor = getColor();
