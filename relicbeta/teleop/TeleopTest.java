@@ -170,18 +170,16 @@ public class TeleopTest extends OpMode{
         if (gamepad1.right_stick_button)
         {
 
-            speedFactor = -1;
+            maxWheelSpeed = -1;
 
         }
         if (gamepad1.left_stick_button)
         {
 
-            speedFactor = 1;
+            maxWheelSpeed = 1;
 
         }
-v
-            sniperMode = true;
-        }
+
         if (gamepad1.x)
         {
             sniperMode = false;
