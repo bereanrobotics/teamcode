@@ -33,6 +33,11 @@ public class HardwareQBot
     public Servo glyphLeft = null;
     public Servo glyphRight = null;
 
+    /* Autonomous timing */
+    public double turnRotate = .5;
+    public double driveOff;
+    public double turnParallel = 1.576;
+    public double driveOut = .09;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -98,6 +103,8 @@ public class HardwareQBot
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
+
 
 
 }

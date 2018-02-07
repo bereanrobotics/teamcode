@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,7 +51,7 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  */
 
 @Autonomous(name="BLUE TWO: GLYPH", group="GLYPH")
-//@Disabled
+@Disabled
 public class AutoBlueTwoGlyph extends LinearOpMode {
 
     /* Declare OpMode members. */

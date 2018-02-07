@@ -52,10 +52,11 @@ public class TeleOpQbot extends OpMode{
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
     private double speedFactor = 1;
     private boolean sniperMode = false;
+    private double maxWheelSpeed = 0.80;
 
     public static final double POWER_FACTOR_RACK = .25;
     public static final double POWER_FACTOR_180 = 1;
-    static double CLAW_SPEED = 0.2;
+    static double CLAW_SPEED = 0.4;
 
     double glyphGrabber = 0;
 
@@ -98,9 +99,9 @@ public class TeleOpQbot extends OpMode{
         double front;
         double back;
         double m180;
-        double rack;
+        //double rack;
 
-        final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+        final double    CLAW_SPEED  = 0.04 ;                 // sets rate to move servo
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -109,6 +110,72 @@ public class TeleOpQbot extends OpMode{
         front = -gamepad1.left_stick_x;
         back = -gamepad1.right_stick_x;
 
+        if (gamepad1.dpad_up)
+        {
+
+            left = maxWheelSpeed;
+            right= maxWheelSpeed;
+            back = 0;
+            front = 0;
+        }
+
+        if (gamepad1.dpad_down)
+        {
+
+
+            left = -maxWheelSpeed;
+            right= -maxWheelSpeed;
+            back = 0;
+            front = 0;
+        }
+
+        if (gamepad1.dpad_left)
+        {
+
+            left = 0;
+            right= 0;
+            back = -maxWheelSpeed;
+            front = -maxWheelSpeed;
+        }
+        if (gamepad1.dpad_right)
+        {
+
+
+            left = 0;
+            right= 0;
+            back = maxWheelSpeed;// negative means right
+            front = maxWheelSpeed; // positive means left
+        }
+
+        if (gamepad1.left_bumper)
+        {
+
+            left = -maxWheelSpeed;
+            right= maxWheelSpeed;
+            back = maxWheelSpeed;
+            front = -maxWheelSpeed;
+        }
+        if (gamepad1.right_bumper)
+        {
+
+            left = maxWheelSpeed;
+            right= -maxWheelSpeed;
+            back = -maxWheelSpeed;
+            front = maxWheelSpeed;
+        }
+
+        if (gamepad1.right_stick_button)
+        {
+
+            speedFactor = -1;
+
+        }
+        if (gamepad1.left_stick_button)
+        {
+
+            speedFactor = 1;
+
+        }
         if (gamepad1.y)
         {
             sniperMode = true;
@@ -130,9 +197,9 @@ public class TeleOpQbot extends OpMode{
 
         //note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad2.left_stick_y;
-        rack = -gamepad2.right_stick_y;
+        //rack = -gamepad2.right_stick_y;
 
-        robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
+        //robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
         robot.motor180.setPower(m180 * POWER_FACTOR_180);
 
         // Use gamepad left & right Bumpers to open and close the claw
@@ -141,17 +208,20 @@ public class TeleOpQbot extends OpMode{
         else if (gamepad2.left_bumper)
             glyphGrabber -= CLAW_SPEED;
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
-        robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
-        robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
+
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
+            robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
+            robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
 
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-
+        telemetry.addData("glyph", "%.2f", glyphGrabber);
+        telemetry.addData("arm", "%.2f", m180);
+        telemetry.update();
     }
 
     /*

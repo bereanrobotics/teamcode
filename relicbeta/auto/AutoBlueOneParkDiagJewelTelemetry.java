@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,8 +51,8 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="TBLUE ONE: PARK JEWEL ", group="FINAL")
-//@Disabled
+@Autonomous(name="BLUE ONE: PARK JEWEL ", group="FINAL")
+@Disabled
 public class AutoBlueOneParkDiagJewelTelemetry extends LinearOpMode {
 
     /* Declare OpMode members. */

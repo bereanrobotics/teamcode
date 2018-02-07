@@ -107,6 +107,7 @@ public class TeleopTest extends OpMode{
         double front;
         double back;
 
+        /*
         left = 0;
         right = 0;
         front = 0;
@@ -185,15 +186,11 @@ public class TeleopTest extends OpMode{
             sniperMode = false;
         }
 
-        if(sniperMode)
-            speedFactor = .5;
-        else
-            speedFactor = 1;
 
-        robot.leftmotor.setPower(left * speedFactor);
-        robot.backmotor.setPower(back * speedFactor);
-        robot.rightmotor.setPower(right * speedFactor);
-        robot.frontmotor.setPower(front * speedFactor);
+        robot.leftmotor.setPower(left);
+        robot.backmotor.setPower(back);
+        robot.rightmotor.setPower(right);
+        robot.frontmotor.setPower(front);
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
@@ -202,6 +199,7 @@ public class TeleopTest extends OpMode{
         telemetry.addData("back", "%.2f", back);
         telemetry.addData("front", "%.2f", front);
 
+*/
     }
 
     /*
