@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.relicbeta.teleop;
+package org.firstinspires.ftc.teamcode.relic.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 @TeleOp(name="TeleOpQbot", group="Q")
 // @Disabled
 
-public class TeleOpQbot extends OpMode{
+public class TeleOpQbotTest extends OpMode{
 
     /* Declare OpMode members. */
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -94,10 +94,10 @@ public class TeleOpQbot extends OpMode{
      */
     @Override
     public void loop() {
-        double leftfront;
-        double rightfront;
-        double rightbackfront;
-        double leftback;
+        double left;
+        double right;
+        double front;
+        double back;
         double m180;
         //double rack;
 
@@ -209,10 +209,10 @@ public class TeleOpQbot extends OpMode{
             glyphGrabber -= CLAW_SPEED;
 
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
-        robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
-        robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
+            robot.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
+            robot.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
 
 
         // Send telemetry message to signify robot running;
