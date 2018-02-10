@@ -1,23 +1,17 @@
-package org.firstinspires.ftc.teamcode.relicbeta.hardware;
+package org.firstinspires.ftc.teamcode.relic.hardware;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Hardware;
 
-/*
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a Robot.
- *
+/**
+ * Created by BCHSRobotics1 on 2/6/2018.
  */
-public class HardwareJewelArm
-{
-    public static final double MID_SERVO =  0.5 ;
-    public static final int LEFT = 1;
-    public static final int RIGHT = 2;
-    public static final int BLUE = 100;
-    public static final int RED = 200;
+
+public class HardwareQJewelArm {
 
     /* Public OpMode members. */
     public Servo jewelArmLift = null;
@@ -28,9 +22,7 @@ public class HardwareJewelArm
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareJewelArm(){
-
-    }
+    public HardwareQJewelArm(){}
 
     /* handle standard servo initialization */
     private Servo initServo(String name, double pos, boolean reverse) {
@@ -47,8 +39,8 @@ public class HardwareJewelArm
         hwMap = ahwMap; // initialize before calling other init functions
 
         // Define and initialize ALL installed servos.
-        jewelArmLift = initServo("arm", MID_SERVO, false);
-        sensorColor = hwMap.get(ColorSensor.class, "color");
+        jewelArmLift = initServo(HardwareQConstants.JEWEL_ARM_SERVONAME, HardwareQConstants.MID_SERVO, false);
+        sensorColor = hwMap.get(ColorSensor.class, HardwareQConstants.COLOR_SENSORNAME);
     }
 
     /***
@@ -86,8 +78,8 @@ public class HardwareJewelArm
     {
         //get sensor color
         // if sensor color == team color
-                return LEFT;
+        return HardwareQConstants.LEFT;
         // else return right;
     }
-}
 
+}
