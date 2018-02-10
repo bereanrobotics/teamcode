@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.relic.auto;
+package org.firstinspires.ftc.teamcode.relicbeta.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareRRQbot;
 
 @Autonomous(name="BLUE ONE: GLYPH", group="GLYPH")
 @Disabled
-public class AutoBlueOneGlyph extends LinearOpMode {
+public class AutoBlueOneGlyphFinal extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareRRQbot robot = new HardwareRRQbot(); // use the class created to define a Aimbot's hardware
