@@ -43,7 +43,7 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpQbot", group="Q")
+@TeleOp(name="TeleOpQTestbot", group="Q")
 // @Disabled
 
 public class TeleOpQbotTest extends OpMode{

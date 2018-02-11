@@ -30,13 +30,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.relicbeta.teleop;
+package org.firstinspires.ftc.teamcode.relic.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 
 
@@ -44,13 +46,13 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpStrafe", group="test")
+@TeleOp(name="TeleOpStrafeTest", group="FINAL")
 // @Disabled
 
 public class TeleopTest extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
+    HardwareQDrive bot = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
     private double speedFactor = 1;
     private boolean sniperMode = false;
     private double maxWheelSpeed = 0.80;
@@ -68,7 +70,7 @@ public class TeleopTest extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        bot.init(hardwareMap, telemetry, HardwareQConstants.FALSE);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -88,10 +90,10 @@ public class TeleopTest extends OpMode{
     @Override
     public void start() {
 
-        robot.backmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.frontmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.leftmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bot.rightfrontmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bot.rightbackmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bot.leftfrontmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bot.rightbackmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
 
@@ -102,12 +104,38 @@ public class TeleopTest extends OpMode{
      */
     @Override
     public void loop() {
+
+
+        while (gamepad1.dpad_up)
+        {
+            bot.strafe(HardwareQConstants.FORWARD, 0, maxWheelSpeed);
+            if (!gamepad1.dpad_up) {bot.isAuto = true;}
+        }
+        while (gamepad1.dpad_down)
+        {
+            bot.strafe(HardwareQConstants.BACKWARD, 0, maxWheelSpeed);
+            if (!gamepad1.dpad_down) {bot.isAuto = true;}
+
+        }
+        while (gamepad1.dpad_right)
+        {
+            bot.strafe(HardwareQConstants.RIGHT, 0, maxWheelSpeed);
+            if (!gamepad1.dpad_right) {bot.isAuto = true;}
+
+        }
+        while (gamepad1.dpad_left)
+        {
+            bot.strafe(HardwareQConstants.LEFT, 0, maxWheelSpeed);
+            if (!gamepad1.dpad_left) {bot.isAuto = true;}
+
+        }
+        /*
+
         double left;
         double right;
         double front;
         double back;
 
-        /*
         left = 0;
         right = 0;
         front = 0;

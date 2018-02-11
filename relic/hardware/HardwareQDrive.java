@@ -22,8 +22,8 @@ public class HardwareQDrive {
     HardwareMap hwMap =  null;
     private ElapsedTime runtime  = new ElapsedTime();
 
-    private double speed = .25;
     private Telemetry telemetry;
+    public boolean isAuto;
 
     public HardwareQDrive(){}
 
@@ -37,21 +37,24 @@ public class HardwareQDrive {
         return motor;
     }
 
-    public void init(HardwareMap ahwMap, Telemetry telemetryPassed) {
+    public void init(HardwareMap ahwMap, Telemetry telemetryPassed, boolean isAutonomous) {
 
         hwMap = ahwMap;
         telemetry = telemetryPassed;
+        isAuto = isAutonomous;
 
-        rightfrontmotor = initMotor(HardwareQConstants.RIGHT_FRONT_MOTORNAME, true);
-        rightbackmotor  = initMotor(HardwareQConstants.RIGHT_BACK_MOTORNAME, true);
-        leftfrontmotor  = initMotor(HardwareQConstants.LEFT_FRONT_MOTORNAME, false);
-        leftbackmotor   = initMotor(HardwareQConstants.LEFT_BACK_MOTORNAME, false);
+        rightfrontmotor = initMotor(HardwareQConstants.RIGHT_FRONT_MOTORNAME, false);
+        rightbackmotor  = initMotor(HardwareQConstants.RIGHT_BACK_MOTORNAME, false);
+        leftfrontmotor  = initMotor(HardwareQConstants.LEFT_FRONT_MOTORNAME, true);
+        leftbackmotor   = initMotor(HardwareQConstants.LEFT_BACK_MOTORNAME, true );
 
     }
 
-    private void drive (int direction, double straightTime)
+    public void strafe (int direction, double straightTime, double speed)
     {
-        double startTime = runtime.seconds();
+            double startTime = runtime.seconds();
+
+
 
         if (direction == HardwareQConstants.FORWARD)
         {
@@ -96,12 +99,15 @@ public class HardwareQDrive {
         while ((runtime.seconds()-startTime) < straightTime) //test this too
         {   this.telemetry.update();
         }
+        if (isAuto == true) {
 
-        stopMoving();
+            stopMoving();
+        }
     }
 
 
-    public void rotateRobot(int direction, double rotateSeconds, Telemetry telemetry)
+
+    public void rotateRobot(int direction, double rotateSeconds, double speed)
     {
         double startTime = runtime.seconds();
 

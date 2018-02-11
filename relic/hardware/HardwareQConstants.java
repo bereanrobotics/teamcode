@@ -15,13 +15,16 @@ public class HardwareQConstants {
     public static final int BLUE     = 100;
     public static final int RED      = 200;
 
+    public static final boolean TRUE  = true;
+    public static final boolean FALSE = false;
+
     public static final double MID_SERVO =  0.5 ;
 
     // Hardware Configuration Names
-    public static final String RIGHT_FRONT_MOTORNAME = "rightfrontmotor";
-    public static final String RIGHT_BACK_MOTORNAME  = "rightbackmotor";
-    public static final String LEFT_FRONT_MOTORNAME  = "leftfrontmotor";
-    public static final String LEFT_BACK_MOTORNAME   = "leftbackmotor";
+    public static final String RIGHT_FRONT_MOTORNAME = "rightfront";
+    public static final String RIGHT_BACK_MOTORNAME  = "rightback";
+    public static final String LEFT_FRONT_MOTORNAME  = "leftfront";
+    public static final String LEFT_BACK_MOTORNAME   = "leftback";
     public static final String GLYPH_ARM_MOTORNAME   = "motor180";
 
     public static final String GLYPH_RIGHT_SERVONAME = "glyphright";
