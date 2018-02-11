@@ -43,10 +43,10 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpQbot", group="Q")
+@TeleOp(name="TeleOpTest", group="Q")
 // @Disabled
 
-public class TeleOpQbot extends OpMode{
+public class TeleopTestx extends OpMode{
 
     /* Declare OpMode members. */
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -94,10 +94,10 @@ public class TeleOpQbot extends OpMode{
      */
     @Override
     public void loop() {
-        double leftfront;
-        double rightfront;
-        double rightbackfront;
-        double leftback;
+        double left;
+        double right;
+        double front;
+        double back;
         double m180;
         //double rack;
 
