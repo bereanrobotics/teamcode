@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.relicbeta.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
@@ -75,6 +76,23 @@ public class AutoBlueOne extends LinearOpMode {
     private int teamPosition = ONE;
 
     /////////////
+    public void armMoveTo(int armPos)  {
+
+        if (opModeIsActive()) {
+            armPos = Range.clip( armPos, 0, robot.motor180MaxPosition );
+            robot.motor180.setTargetPosition(armPos);
+            robot.motor180.setPower( 0.25 );
+            // keep looping while we are busy
+            runtime.reset();
+            while (opModeIsActive() && robot.motor180.isBusy()) {
+                // Allow time for other processes to run.
+                telemetry.addData("Arm position", robot.motor180.getCurrentPosition());
+                telemetry.update();
+                idle();
+            }
+            robot.motor180.setPower(0);
+        }
+    }
 
     @Override
     public void runOpMode() {
@@ -83,6 +101,7 @@ public class AutoBlueOne extends LinearOpMode {
         jArm.init(hardwareMap);
         robot.glyphLeft.setPosition(0);
         robot.glyphRight.setPosition(1);
+        armMoveTo( 100 );
 
         telemetry.addData("Status", "1");
 

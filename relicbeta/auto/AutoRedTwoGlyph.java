@@ -212,18 +212,6 @@ public class AutoRedTwoGlyph extends LinearOpMode {
         robot.glyphRight.setPosition(robot.MID_SERVO - position);
     }
 
-    private void rack( double power, double time )
-    {
-        double startTime = runtime.seconds();
-
-        robot.motorRack.setPower( power);
-        while (opModeIsActive() && ((runtime.seconds()-startTime) < time))
-        {
-            telemetry.addData("Status", "moveRack");
-            telemetry.update();
-        }
-        robot.motorRack.setPower( 0 );
-    }
 
     private void m180( double power, double time )
     {

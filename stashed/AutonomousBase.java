@@ -27,12 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.relicbeta.auto;
+package org.firstinspires.ftc.teamcode.stashed;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
@@ -40,21 +38,12 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 
 
 /**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ * This is a base class for Relic Recovery Autonomous opcodes
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+ **/
 
-@Autonomous(name="BLUE ONE:PARKJEWEL", group="FINAL")
-@Disabled
-public class AutoBlueOneParkDiagJewel extends LinearOpMode {
+
+public class AutonomousBase extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareQBot robot    = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -62,181 +51,61 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private double speed = 0.25;
-    private int directionRotated;
-    private int directionToDrive;
-    public static final int BLUE  = 94;
-    public static final int RED   = 49;
-    public static final int ONE   = 1;
-    public static final int TWO   = 2;
-    public static final int THREE = 3;
-    private int positionNumber;
+    private static final int BLUE = 94;
+    //public static final int RED  = 49;
 
-    /////////////
-
-    private int teamColor = BLUE;
-    private int teamPosition = ONE;
-
-    /////////////
+    public int teamColor;
 
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
         jArm.init(hardwareMap);
-        robot.glyphLeft.setPosition(0);
-        robot.glyphRight.setPosition(1);
-
-        telemetry.addData("Status", "1");
 
         telemetry.addData("Status", "Initialized");
 
         telemetry.update();
-        sleep(1000);
         telemetry.addData("Servo Position", jArm.jewelArmLift.getPosition());
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        positionNumber = getPostionNo();
-        positionNumber = ONE; //delete this line once vuforia works
-        robot.glyphLeft.setPosition(1);
-        robot.glyphRight.setPosition(0);
-        robot.motor180.setPower(.5);
-
+        //getTeamColor();
+        teamColor = BLUE;
 
         knockJewel();
-        pauseRobot(1);
 
-        telemetry.addData("Status", "2");
-        telemetry.update();
-
-        getDirectionDrive(directionRotated);
-        diagonal(directionToDrive, 2.2); //2.2 is an estimate
-        pauseRobot(1);
-
-        telemetry.addData("Status", "3");
-        telemetry.update();
-
-        parallel(); //makes robot parallel to the glyph case
-        delivierBlock();
-        straight(robot.FORWARD, 1.2); // add code afterwards to lower the arm into the slot
-
-        /*
         diagonal(robot.FORWARD_RIGHT, 2.4);
         pauseRobot(.5);
         rotateRobot(robot.LEFT, .6);
         pauseRobot(.5);
         straight(robot.FORWARD, 1.2);
-        pauseRobot(.5);*/
+        pauseRobot(.5);
 
         stopMoving();
     }
 
     private void knockJewel ()
     {
-        int jewelColor;
-
-            jArm.deploy();
-            pauseRobot(2);
-            //sleep(2000);
-
-            jewelColor = getColor();
-
-            if (teamColor != jewelColor) //looking at my jewel, so knock right
+        if (teamColor == BLUE)
+        {
+            jArm.jewelArmLift.setPosition(1);
+            sleep(600);
+            if ((jArm.sensorColor.blue()> 128)&&(jArm.sensorColor.red() < 126)) //knock of red
             {
-                rotateRobot(robot.RIGHT, .45);
-                directionRotated = robot.RIGHT;
-
+                rotateRobot(robot.RIGHT, .6);
+                rotateRobot(robot.LEFT, .6);
             } else
             {
-                rotateRobot(robot.LEFT, .45);
-                directionRotated = robot.LEFT;
+
+            rotateRobot(robot.LEFT, .6);
+            rotateRobot(robot.RIGHT, .6);
             }
 
-            jArm.retract();
-
-
-    }
-
-    private void parallel ()
-    {
-        if (((directionRotated == robot.RIGHT) && (teamPosition == ONE)) || ((directionRotated == robot.LEFT) && (teamPosition == TWO)))
-        {
-            rotateRobot(robot.RIGHT, 1.3);
-        } else
-        {
-            rotateRobot(robot.LEFT, 1.3);
+            jArm.jewelArmLift.setPosition(.5);
         }
-    }
 
-    private void delivierBlock ()
-    {
-        if (teamColor == RED)
-        {
-            straight(robot.LEFT, .2); //.2 is an estimate
-            if (positionNumber == TWO)
-            {
-                straight(robot.LEFT, .4); //.4 is an estimate
-            }
-            if (positionNumber == THREE)
-            {
-                straight(robot.LEFT, .4);
-            }
-        } else
-        {
-            straight(robot.RIGHT, .2);
-            if (positionNumber == TWO)
-            {
-                straight(robot.RIGHT, .4);
-            }
-            if (positionNumber == THREE)
-            {
-                straight(robot.RIGHT, .4);
-            }
-        }
-        straight(robot.FORWARD, .4); // add code afterwards to lower the arm into the slot
-    }
-
-    private int getPostionNo ()
-    {
-        return TWO;
-    }
-
-    private int getColor()
-    {
-        int blueValue;
-        int redValue;
-
-        blueValue = jArm.sensorColor.blue();
-        redValue = jArm.sensorColor.red();
-        telemetry.addData("Blue", blueValue);
-        telemetry.addData("Red", redValue);
-        telemetry.update();
-        if (blueValue > redValue) {
-            return BLUE;
-        }
-        else {
-            return RED;
-        }
-    }
-
-    private void getDirectionDrive(int directionRotate)
-    {
-        if (teamColor == RED) {
-            if (directionRotate == robot.RIGHT) {
-                directionToDrive = robot.FORWARD_RIGHT;
-            } else {
-                directionToDrive = robot.BACKWARD_RIGHT;
-            }
-        } else if (teamColor == BLUE)
-        {
-            if (directionRotate == robot.RIGHT) {
-                directionToDrive = robot.BACKWARD_LEFT;
-            } else {
-                directionToDrive = robot.FORWARD_LEFT;
-            }
-        }
     }
 
     private void pauseRobot(double pauseSeconds)
@@ -359,7 +228,6 @@ public class AutoBlueOneParkDiagJewel extends LinearOpMode {
         robot.glyphLeft.setPosition(robot.MID_SERVO + position);
         robot.glyphRight.setPosition(robot.MID_SERVO - position);
     }
-
 
     private void m180( double power, double time )
     {

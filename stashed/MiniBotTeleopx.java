@@ -32,33 +32,26 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.relicbeta.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
-
+import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareMiniBot;
 
 /**
- * This file provides  Telop driving for Aimbot.
+ * This file provides  Telop driving for Minibot.
  */
 
-@TeleOp(name="TeleOpStrafe", group="test")
-// @Disabled
-
-public class TeleopTest extends OpMode{
+@TeleOp(name="Minibotx: Teleop", group="mini")
+@Disabled
+public class MiniBotTeleopx extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
-    private double speedFactor = 1;
-    private boolean sniperMode = false;
-    private double maxWheelSpeed = 0.80;
-    //public static final double POWER_FACTOR_RACK = .25;
-    //public static final double POWER_FACTOR_180 = 1;
-    //static double CLAW_SPEED = 0.2;
 
-    //double glyphGrabber = 0;
+    HardwareMiniBot robot = new HardwareMiniBot
+            (); // use the class created to define a Aimbot's hardware
+    boolean sniperModeOn = false;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -87,15 +80,7 @@ public class TeleopTest extends OpMode{
      */
     @Override
     public void start() {
-
-        robot.backmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.frontmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.leftmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-
-
-
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -104,96 +89,45 @@ public class TeleopTest extends OpMode{
     public void loop() {
         double left;
         double right;
-        double front;
-        double back;
 
-        /*
-        left = 0;
-        right = 0;
-        front = 0;
-        back = 0;
-
-
-        if (gamepad1.dpad_up)
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        left = gamepad1.left_stick_y;
+        right = gamepad1.right_stick_y;
+        if (!sniperModeOn) {
+            robot.frontLeftMotor.setPower(left);
+            robot.frontRightMotor.setPower(right);
+        }
+        else
         {
-
-            left = maxWheelSpeed;
-            right= maxWheelSpeed;
-            back = 0;
-            front = 0;
+            robot.frontLeftMotor.setPower(left/2);
+            robot.frontRightMotor.setPower(right/2);
         }
 
-        if (gamepad1.dpad_down)
+        if (gamepad1.x)
         {
-
-
-            left = -maxWheelSpeed;
-            right= -maxWheelSpeed;
-            back = 0;
-            front = 0;
+            sniperModeOn = true;
         }
-
-        if (gamepad1.dpad_left)
+        if (gamepad1.y)
         {
-
-            left = 0;
-            right= 0;
-            back = -maxWheelSpeed;
-            front = -maxWheelSpeed;
+            sniperModeOn = false;
         }
-        if (gamepad1.dpad_right)
-        {
+/*
+        if (gamepad1.left_trigger > 0)
+            robot.pusherLeft.setPosition(0.5);
+        else
+            robot.pusherLeft.setPosition(0);
 
-
-            left = 0;
-            right= 0;
-            back = maxWheelSpeed;// negative means right
-            front = maxWheelSpeed; // positive means left
-        }
-
-        if (gamepad1.left_bumper)
-        {
-
-            left = -maxWheelSpeed;
-            right= maxWheelSpeed;
-            back = maxWheelSpeed;
-            front = -maxWheelSpeed;
-        }
-        if (gamepad1.right_bumper)
-        {
-
-            left = maxWheelSpeed;
-            right= -maxWheelSpeed;
-            back = -maxWheelSpeed;
-            front = maxWheelSpeed;
-        }
-
-        if (gamepad1.right_stick_button)
-        {
-
-            speedFactor = -1;
-
-        }
-        if (gamepad1.left_stick_button)
-        {
-
-            speedFactor = 1;
-
-        }
-
-        robot.leftmotor.setPower(left);
-        robot.backmotor.setPower(back);
-        robot.rightmotor.setPower(right);
-        robot.frontmotor.setPower(front);
-
+        if (gamepad1.right_trigger > 0)
+            robot.pusherRight.setPosition(0.6);
+        else
+            robot.pusherRight.setPosition(0);
+*/
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("back", "%.2f", back);
-        telemetry.addData("front", "%.2f", front);
-
-*/
+        //telemetry.addData("color", "%d", robot.getColorNumber());
+        updateTelemetry(telemetry);
     }
 
     /*
