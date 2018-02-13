@@ -79,6 +79,7 @@ public class AutoBlueOne extends LinearOpMode {
     public void armMoveTo(int armPos)  {
 
         if (opModeIsActive()) {
+            // robot.motor180SetPosition( armPos ); // use this instead of the following three lines
             armPos = Range.clip( armPos, 0, robot.motor180MaxPosition );
             robot.motor180.setTargetPosition(armPos);
             robot.motor180.setPower( 0.25 );

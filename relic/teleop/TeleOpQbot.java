@@ -198,13 +198,7 @@ public class TeleOpQbot extends OpMode{
         m180 = -gamepad2.left_stick_y;
         int increment = (int) Math.floor( m180 * 100 );
         int armPos = robot.motor180.getCurrentPosition() + increment;
-        armPos = Range.clip( armPos, 0, robot.motor180MaxPosition );
-        if ( armPos != robot.motor180.getTargetPosition() ) {
-            robot.motor180.setTargetPosition( armPos );
-            robot.motor180.setPower( 0.25 );
-        } else if ( !robot.motor180.isBusy() ) {  // && ( armMotor.getCurrentPosition() == armPos )){
-            robot.motor180.setPower( 0 );
-        }
+        robot.motor180SetPosition( armPos );
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper)
