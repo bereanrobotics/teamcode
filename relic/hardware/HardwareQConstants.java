@@ -28,7 +28,7 @@ public class HardwareQConstants {
     public static final String GLYPH_ARM_MOTORNAME   = "motor180";
 
     public static final String GLYPH_RIGHT_SERVONAME = "glyphright";
-    public static final String GLYPH_LEFT_SERVONAME  = "glypleft";
+    public static final String GLYPH_LEFT_SERVONAME  = "glyphleft";
     public static final String JEWEL_ARM_SERVONAME   = "arm";
 
     public static final String COLOR_SENSORNAME      = "color";

@@ -23,10 +23,9 @@ public class HardwareQDrive extends BereanHardware {
 
     public HardwareQDrive(){}
 
-    public void init(HardwareMap ahwMap, Telemetry telemetryPassed, boolean isAutonomous) {
+    public void init(HardwareMap ahwMap, Telemetry telemetryPassed) {
 
         super.init(ahwMap,telemetryPassed);
-        isAuto = isAutonomous;
 
         rightfrontmotor = initMotor(HardwareQConstants.RIGHT_FRONT_MOTORNAME, false);
         rightbackmotor  = initMotor(HardwareQConstants.RIGHT_BACK_MOTORNAME, false);

@@ -76,6 +76,8 @@ public class AutoBlueOne extends LinearOpMode {
     private int teamPosition = ONE;
 
     /////////////
+
+
     public void armMoveTo(int armPos)  {
 
         if (opModeIsActive()) {

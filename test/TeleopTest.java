@@ -73,7 +73,7 @@ public class TeleopTest extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        bot.init(hardwareMap, telemetry, HardwareQConstants.FALSE);
+        bot.init(hardwareMap, telemetry);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //

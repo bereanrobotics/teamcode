@@ -35,6 +35,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
 
 /**
  * Created by BCHSRobotics1 on 2/10/2018.
@@ -43,13 +45,23 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 @Autonomous(name="Test", group="FINAL")
 
 public class Auto extends LinearOpMode{
-    HardwareQDrive drive    = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
+    HardwareQDrive drive        = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
+    HardwareQGlyph gArm         = new HardwareQGlyph();
+    HardwareQJewelArm jArm      = new HardwareQJewelArm();
     private ElapsedTime runtime = new ElapsedTime();
     private double speed = 0.25;
 
+    private int teamColor;
+    private int teamPosition;
+
     @Override
     public void runOpMode() {
-        drive.init(hardwareMap, telemetry, HardwareQConstants.TRUE);
+        drive.init(hardwareMap, telemetry);
+        gArm.init (hardwareMap, telemetry);
+        jArm.init (hardwareMap, telemetry);
+
+        gArm.glyphRight.setPosition(1);
+        gArm.glyphLeft.setPosition(0);
 
         waitForStart();
         runtime.reset();

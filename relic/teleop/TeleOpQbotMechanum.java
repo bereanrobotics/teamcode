@@ -56,6 +56,7 @@ public class TeleOpQbotMechanum extends OpMode{
     private HardwareQDrive driveTrain = new HardwareQDrive(); // the robot module for the drive train
     private HardwareQGlyph glyphArm = new HardwareQGlyph(); // the robot module for the glyph arm
     private double speedFactor     = 1;
+    private int directionFactor  = 1; // positive = normal direction is forward
     private double maxWheelSpeed = 0.80;
     private boolean strafeMode = false;
 
@@ -72,7 +73,6 @@ public class TeleOpQbotMechanum extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        //robot.init(hardwareMap);
         driveTrain.init(hardwareMap,telemetry);
         glyphArm.init(hardwareMap,telemetry);
 
@@ -105,6 +105,7 @@ public class TeleOpQbotMechanum extends OpMode{
         double front;
         double back;
         double m180;
+        double speedDirectionFactor;
         //double rack;
 
         final double    CLAW_SPEED  = 0.04 ;                 // sets rate to move servo
@@ -136,14 +137,15 @@ public class TeleOpQbotMechanum extends OpMode{
 
         if (gamepad1.right_stick_button)
         {
-            speedFactor *= -1;
+            directionFactor = -1; // reverse the orientation of the robot front to back
         }
+
         if (gamepad1.left_stick_button)
         {
-            speedFactor *= 1;
+            directionFactor = 1; // return to normal orientation
         }
 
-
+        speedDirectionFactor = speedFactor * directionFactor;
         // control using the dpad.  strafing mode left and right with forward/back
         // fixed speed
         //
@@ -151,50 +153,50 @@ public class TeleOpQbotMechanum extends OpMode{
         if (gamepad1.dpad_up)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.FORWARD,maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.FORWARD,maxWheelSpeed * speedDirectionFactor);
         }
 
         //strafe backward
         if (gamepad1.dpad_down)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.BACKWARD, maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.BACKWARD, maxWheelSpeed * speedDirectionFactor);
         }
 
         //strafe left
         if (gamepad1.dpad_left)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.LEFT, maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.LEFT, maxWheelSpeed * speedDirectionFactor);
         }
 
         //strafe right
         if (gamepad1.dpad_right)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.RIGHT, maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.RIGHT, maxWheelSpeed * speedDirectionFactor);
         }
 
         //strafe left
         if (gamepad1.left_bumper)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.LEFT, maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.LEFT, maxWheelSpeed * speedDirectionFactor);
         }
 
         //strafe right
         if (gamepad1.right_bumper)
         {
             strafeMode = true;
-            driveTrain.strafe(HardwareQConstants.RIGHT, maxWheelSpeed * speedFactor);
+            driveTrain.strafe(HardwareQConstants.RIGHT, maxWheelSpeed * speedDirectionFactor);
         }
 
         if (!strafeMode) // you must be controlling with the sticks
         {
-            driveTrain.leftfrontmotor.setPower(left * speedFactor);
-            driveTrain.leftbackmotor.setPower(back * speedFactor);
-            driveTrain.rightfrontmotor.setPower(right * speedFactor);
-            driveTrain.rightbackmotor.setPower(front * speedFactor);
+            driveTrain.leftfrontmotor.setPower(left * speedDirectionFactor);
+            driveTrain.leftbackmotor.setPower(back * speedDirectionFactor);
+            driveTrain.rightfrontmotor.setPower(right * speedDirectionFactor);
+            driveTrain.rightbackmotor.setPower(front * speedDirectionFactor);
         } else // if you aren't using sticks or the other options, make sure to stop
             if (!gamepad1.dpad_up &&
                 !gamepad1.dpad_down &&
