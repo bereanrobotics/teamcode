@@ -19,6 +19,7 @@ public class HardwareQGlyph extends BereanHardware {
     public DcMotor motor180 = null;
     public Servo glyphRight = null;
     public Servo glyphLeft  = null;
+    public static final double MID_SERVO       =  0.5 ;
 
     private int motor180MaxPosition = 3000;
     private double motor180Power = 0.25;

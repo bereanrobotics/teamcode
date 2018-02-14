@@ -21,7 +21,7 @@ public class HardwareQDrive extends BereanHardware {
     public DcMotor leftfrontmotor  = null;
     public DcMotor leftbackmotor   = null;
 
-    private Telemetry telemetry;
+    //private Telemetry telemetry;
     public boolean isAuto;
 
     public HardwareQDrive(){}
@@ -88,10 +88,9 @@ public class HardwareQDrive extends BereanHardware {
         while ((runtime.seconds()-startTime) < straightTime) //test this too
         {   this.telemetry.update();
         }
-        if (isAuto == true) {
 
-            stopMoving();
-        }
+        stopMoving();
+
     }
 
     public void rotateRobot(int direction, double rotateSeconds, double speed)

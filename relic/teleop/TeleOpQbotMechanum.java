@@ -39,7 +39,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 
 
 /**
@@ -53,11 +52,11 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 public class TeleOpQbotMechanum extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareQBot robot = new HardwareQBot();
-    HardwareQDrive driveTrain = new HardwareQDrive(); // the robot module for the drive train
-    HardwareQGlyph glypArm = new HardwareQGlyph(); // the robot module for the glyph arm
-    private double speedFactor = 1;
-    private boolean sniperMode = false;
+    //HardwareQBot robot = new HardwareQBot();
+    private HardwareQDrive driveTrain = new HardwareQDrive(); // the robot module for the drive train
+    private HardwareQGlyph glyphArm = new HardwareQGlyph(); // the robot module for the glyph arm
+    private double speedFactor     = 1;
+    private double directionFactor = 1;
     private double maxWheelSpeed = 0.80;
     private boolean strafeMode = false;
 
@@ -74,9 +73,9 @@ public class TeleOpQbotMechanum extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        //robot.init(hardwareMap);
         driveTrain.init(hardwareMap,telemetry);
-        glypArm.init(hardwareMap,telemetry);
+        glyphArm.init(hardwareMap,telemetry);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -128,26 +127,21 @@ public class TeleOpQbotMechanum extends OpMode{
 
         if (gamepad1.right_stick_button)
         {
-            speedFactor = -1;
+            directionFactor = -1;
         }
         if (gamepad1.left_stick_button)
         {
-            speedFactor = 1;
+            directionFactor = 1;
         }
 
         if (gamepad1.y)
         {
-            sniperMode = true;
+            speedFactor = .5;
         }
         if (gamepad1.x)
         {
-            sniperMode = false;
-        }
-
-        if(sniperMode)
-            speedFactor = .5;
-        else
             speedFactor = 1;
+        }
 
         // control using the dpad.  strafing mode left and right with forward/back
         // fixed speed
@@ -211,8 +205,8 @@ public class TeleOpQbotMechanum extends OpMode{
         //note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad2.left_stick_y;
         int increment = (int) Math.floor( m180 * 100 );
-        int armPos = glypArm.motor180.getCurrentPosition() + increment;
-        glypArm.motor180SetPosition( armPos );
+        int armPos = glyphArm.motor180.getCurrentPosition() + increment;
+        glyphArm.motor180SetPosition( armPos );
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper)
@@ -222,8 +216,8 @@ public class TeleOpQbotMechanum extends OpMode{
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
         glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
-        glypArm.glyphLeft.setPosition(robot.MID_SERVO + glyphGrabber);
-        glypArm.glyphRight.setPosition(robot.MID_SERVO - glyphGrabber);
+        glyphArm.glyphLeft.setPosition(glyphArm.MID_SERVO + glyphGrabber);
+        glyphArm.glyphRight.setPosition(glyphArm.MID_SERVO - glyphGrabber);
 
 
         // Send telemetry message to signify robot running;
