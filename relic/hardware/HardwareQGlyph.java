@@ -29,7 +29,7 @@ public class HardwareQGlyph extends BereanHardware {
 
         super.init(ahwMap,telemetryPassed);
 
-        motor180 = initMotor(HardwareQConstants.GLYPH_ARM_MOTORNAME, false);
+        motor180 = initMotorEncoded(HardwareQConstants.GLYPH_ARM_MOTORNAME, false);
         glyphRight = initServo(HardwareQConstants.GLYPH_RIGHT_SERVONAME, 1, false);
         glyphLeft = initServo(HardwareQConstants.GLYPH_LEFT_SERVONAME, 0, false);
 
