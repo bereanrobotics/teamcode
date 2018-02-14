@@ -56,7 +56,6 @@ public class TeleOpQbotMechanum extends OpMode{
     private HardwareQDrive driveTrain = new HardwareQDrive(); // the robot module for the drive train
     private HardwareQGlyph glyphArm = new HardwareQGlyph(); // the robot module for the glyph arm
     private double speedFactor     = 1;
-    private double directionFactor = 1;
     private double maxWheelSpeed = 0.80;
     private boolean strafeMode = false;
 
@@ -125,14 +124,6 @@ public class TeleOpQbotMechanum extends OpMode{
         if ( left != 0 || right != 0)
             strafeMode = false;
 
-        if (gamepad1.right_stick_button)
-        {
-            directionFactor = -1;
-        }
-        if (gamepad1.left_stick_button)
-        {
-            directionFactor = 1;
-        }
 
         if (gamepad1.y)
         {
@@ -142,6 +133,16 @@ public class TeleOpQbotMechanum extends OpMode{
         {
             speedFactor = 1;
         }
+
+        if (gamepad1.right_stick_button)
+        {
+            speedFactor *= -1;
+        }
+        if (gamepad1.left_stick_button)
+        {
+            speedFactor *= 1;
+        }
+
 
         // control using the dpad.  strafing mode left and right with forward/back
         // fixed speed
