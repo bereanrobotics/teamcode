@@ -27,70 +27,75 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.relicbeta.auto;
+package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
-
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+import com.qualcomm.robotcore.util.Range;
 
 @Autonomous(name="Glyph Test", group="Test")
 //@Disabled
 public class AutoGlyphTest extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    //HardwareQBot robot    = new HardwareQBot(); // use the class created to define a Aimbot's hardware
-    DcMotor motor;
-    private ElapsedTime runtime = new ElapsedTime();
-    /////////////
+    private static final int armMaxPos = 3000; // read encoder farthest travel position
+    private static final double armPower = 0.25;
 
-    /////////////
+    DcMotor armMotor;
+    private ElapsedTime runtime = new ElapsedTime();
+
+
+    public void initArm()  {
+        armMotor = hardwareMap.dcMotor.get("motor180");
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setPower(0);
+    }
+
+    public void armMoveTo(int armPos)  {
+
+         if (opModeIsActive()) {
+             armPos = Range.clip( armPos, 0, armMaxPos );
+             armMotor.setTargetPosition(armPos);
+             armMotor.setPower( armPower );
+            // keep looping while we are busy
+            runtime.reset();
+            while (opModeIsActive() && armMotor.isBusy()) {
+                // Allow time for other processes to run.
+                telemetry.addData("Arm position", armMotor.getCurrentPosition());
+                telemetry.update();
+                idle();
+            }
+            armMotor.setPower(0);
+        }
+    }
+
     @Override
     public void runOpMode() {
 
-        //robot.init(hardwareMap);
-        motor = hardwareMap.dcMotor.get("motor180");
-        //motor.setDirection(DcMotor.Direction.REVERSE);
-        motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Declare OpMode members.
+        initArm();
+         // Declare OpMode members.
 
-
-            telemetry.addData("Arm position", motor.getCurrentPosition());
-
+        telemetry.addData("Arm start", armMotor.getCurrentPosition());
         telemetry.addData("Status", "Initialized");
-
         telemetry.update();
-        sleep(1000);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        double startTime = runtime.seconds();
+        armMoveTo( 500 );
+        sleep(1000);
+        armMoveTo( 2500 );
+        sleep(1000);
+        armMoveTo( 1500 );
+        sleep(1000);
+        armMoveTo( 0 );
 
         while (opModeIsActive() )
         {
-            telemetry.addData("Arm position", motor.getCurrentPosition());
+            telemetry.addData("Arm position", armMotor.getCurrentPosition());
             telemetry.update();
         }
     }
-
-  }
+}

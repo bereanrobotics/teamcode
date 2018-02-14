@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  * This is NOT an opmode.
@@ -39,6 +40,9 @@ public class HardwareQBot
     public double turnParallel = 1.576;
     public double driveOut = .09;
 
+    public int motor180MaxPosition = 3000;
+    public double motor180Power = 0.25;
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -54,6 +58,18 @@ public class HardwareQBot
         if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        return motor;
+    }
+
+
+    /* handle standard motor initialization */
+    private DcMotor initMotorEncoded(String name, boolean reverse) {
+        DcMotor motor = hwMap.dcMotor.get(name);
+        if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         return motor;
     }
@@ -76,36 +92,24 @@ public class HardwareQBot
         rightmotor = initMotor("rightmotor", false);
         backmotor   = initMotor("backmotor", true);
         frontmotor  = initMotor("frontmotor", false);
-        motorRack = initMotor("motorrack", false);
-        motor180 = initMotor("motor180", true);
+        //motorRack = initMotor("motorrack", false);
+        motor180 = initMotorEncoded("motor180", false);
         // Define and initialize ALL installed servos.
         glyphLeft = initServo("glyphleft", MID_SERVO, false);
         glyphRight = initServo("glyphright", MID_SERVO, false);
     }
 
-    /***
-     *
-     * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
-     * periodic tick.  This is used to compensate for varying processing times for each cycle.
-     * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
-     *
-     * @param periodMs  Length of wait cycle in mSec.
-     * @throws InterruptedException
-     */
-    public void waitForTick(long periodMs) throws InterruptedException {
-
-        long  remaining = periodMs - (long)period.milliseconds();
-
-        // sleep for the remaining portion of the regular cycle period.
-        if (remaining > 0)
-            Thread.sleep(remaining);
-
-        // Reset the cycle clock for the next pass.
-        period.reset();
+    // moves motor180 to a given position in its range
+    // should convert this to a generic encoder move routine
+    public void motor180SetPosition( int armPos ) {
+        armPos = Range.clip( armPos, 0, motor180MaxPosition );
+        if ( armPos != motor180.getTargetPosition() ) {
+            motor180.setTargetPosition( armPos );
+            motor180.setPower( motor180Power );
+        } else if ( !motor180.isBusy() ) {
+            motor180.setPower( 0 );
+        }
     }
-
-
-
 
 }
 

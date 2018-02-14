@@ -30,8 +30,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.relic.teleop;
 
+
+package org.firstinspires.ftc.teamcode.test;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -108,24 +111,24 @@ public class TeleopTest extends OpMode{
 
         while (gamepad1.dpad_up)
         {
-            bot.strafe(HardwareQConstants.FORWARD, 0, maxWheelSpeed);
+            bot.strafeFor(HardwareQConstants.FORWARD, 0, maxWheelSpeed);
             if (!gamepad1.dpad_up) {bot.isAuto = true;}
         }
         while (gamepad1.dpad_down)
         {
-            bot.strafe(HardwareQConstants.BACKWARD, 0, maxWheelSpeed);
+            bot.strafeFor(HardwareQConstants.BACKWARD, 0, maxWheelSpeed);
             if (!gamepad1.dpad_down) {bot.isAuto = true;}
 
         }
         while (gamepad1.dpad_right)
         {
-            bot.strafe(HardwareQConstants.RIGHT, 0, maxWheelSpeed);
+            bot.strafeFor(HardwareQConstants.RIGHT, 0, maxWheelSpeed);
             if (!gamepad1.dpad_right) {bot.isAuto = true;}
 
         }
         while (gamepad1.dpad_left)
         {
-            bot.strafe(HardwareQConstants.LEFT, 0, maxWheelSpeed);
+            bot.strafeFor(HardwareQConstants.LEFT, 0, maxWheelSpeed);
             if (!gamepad1.dpad_left) {bot.isAuto = true;}
 
         }

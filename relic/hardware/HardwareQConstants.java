@@ -15,8 +15,8 @@ public class HardwareQConstants {
     public static final int BLUE     = 100;
     public static final int RED      = 200;
 
-    public static final boolean TRUE  = true;
-    public static final boolean FALSE = false;
+    public static final boolean TRUE  = true; // why?
+    public static final boolean FALSE = false; // why?
 
     public static final double MID_SERVO =  0.5 ;
 

@@ -8,39 +8,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import edu.berean.ftc.framework.BereanHardware;
+
 /**
  * Created by BCHSRobotics1 on 2/6/2018.
  */
 
-public class HardwareQDrive {
+public class HardwareQDrive extends BereanHardware {
 
     public DcMotor rightfrontmotor = null;
     public DcMotor rightbackmotor  = null;
     public DcMotor leftfrontmotor  = null;
     public DcMotor leftbackmotor   = null;
 
-    HardwareMap hwMap =  null;
-    private ElapsedTime runtime  = new ElapsedTime();
-
     private Telemetry telemetry;
     public boolean isAuto;
 
     public HardwareQDrive(){}
 
-    private DcMotor initMotor(String name, boolean reverse) {
-        DcMotor motor = hwMap.dcMotor.get(name);
-        if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
-        motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        return motor;
-    }
-
     public void init(HardwareMap ahwMap, Telemetry telemetryPassed, boolean isAutonomous) {
 
-        hwMap = ahwMap;
-        telemetry = telemetryPassed;
+        super.init(ahwMap,telemetryPassed);
         isAuto = isAutonomous;
 
         rightfrontmotor = initMotor(HardwareQConstants.RIGHT_FRONT_MOTORNAME, false);
@@ -49,13 +37,8 @@ public class HardwareQDrive {
         leftbackmotor   = initMotor(HardwareQConstants.LEFT_BACK_MOTORNAME, true );
 
     }
-
-    public void strafe (int direction, double straightTime, double speed)
+    public void strafe(int direction, double speed)
     {
-            double startTime = runtime.seconds();
-
-
-
         if (direction == HardwareQConstants.FORWARD)
         {
             this.telemetry.addData("Status", "driving forward");
@@ -94,7 +77,13 @@ public class HardwareQDrive {
             leftfrontmotor.setPower(-speed);
             leftbackmotor.setPower(speed);
         }
+    }
 
+    public void strafeFor(int direction, double straightTime, double speed)
+    {
+        double startTime = runtime.seconds();
+
+        strafe(direction,speed);
 
         while ((runtime.seconds()-startTime) < straightTime) //test this too
         {   this.telemetry.update();
@@ -104,8 +93,6 @@ public class HardwareQDrive {
             stopMoving();
         }
     }
-
-
 
     public void rotateRobot(int direction, double rotateSeconds, double speed)
     {
@@ -134,7 +121,7 @@ public class HardwareQDrive {
         stopMoving();
     }
 
-    private void stopMoving() {
+    public void stopMoving() {
         rightfrontmotor.setPower(0);
         rightbackmotor.setPower(0);
         leftfrontmotor.setPower(0);

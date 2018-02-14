@@ -43,10 +43,10 @@ import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
  * This file provides  Telop driving for Aimbot.
  */
 
-@TeleOp(name="TeleOpQbot", group="Q")
+@TeleOp(name="TeleOpQbotBeta", group="Q")
 // @Disabled
 
-public class TeleOpQbot extends OpMode{
+public class TeleOpQbotBeta extends OpMode{
 
     /* Declare OpMode members. */
     HardwareQBot robot = new HardwareQBot(); // use the class created to define a Aimbot's hardware
@@ -197,10 +197,15 @@ public class TeleOpQbot extends OpMode{
 
         //note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad2.left_stick_y;
-        //rack = -gamepad2.right_stick_y;
-
-        //robot.motorRack.setPower(rack * POWER_FACTOR_RACK);
-        robot.motor180.setPower(m180 * POWER_FACTOR_180);
+        int increment = (int) Math.floor( m180 * 100 );
+        int armPos = robot.motor180.getCurrentPosition() + increment;
+        armPos = Range.clip( armPos, 0, robot.motor180MaxPosition );
+        if ( armPos != robot.motor180.getTargetPosition() ) {
+            robot.motor180.setTargetPosition( armPos );
+            robot.motor180.setPower( 0.25 );
+        } else if ( !robot.motor180.isBusy() ) {  // && ( armMotor.getCurrentPosition() == armPos )){
+            robot.motor180.setPower( 0 );
+        }
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper)

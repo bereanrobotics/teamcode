@@ -35,9 +35,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
-import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareJewelArm;
-import org.firstinspires.ftc.teamcode.relicbeta.hardware.HardwareQBot;
 
 /**
  * Created by BCHSRobotics1 on 2/10/2018.
@@ -53,13 +50,14 @@ public class Auto extends LinearOpMode{
     @Override
     public void runOpMode() {
         drive.init(hardwareMap, telemetry, HardwareQConstants.TRUE);
+
         waitForStart();
         runtime.reset();
 
-        drive.strafe(HardwareQConstants.FORWARD, 3, speed);
-        drive.strafe(HardwareQConstants.RIGHT, 3, speed);
-        drive.strafe(HardwareQConstants.BACKWARD, 3, speed);
-        drive.strafe(HardwareQConstants.LEFT, 3, speed);
+        drive.strafeFor(HardwareQConstants.FORWARD, 3, speed);
+        drive.strafeFor(HardwareQConstants.RIGHT, 3, speed);
+        drive.strafeFor(HardwareQConstants.BACKWARD, 3, speed);
+        drive.strafeFor(HardwareQConstants.LEFT, 3, speed);
     }
 
 
