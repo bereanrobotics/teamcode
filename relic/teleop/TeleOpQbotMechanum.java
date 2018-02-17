@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
 
 
 /**
@@ -46,7 +47,7 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
  * the mechanum chassis
  */
 
-@TeleOp(name="TeleOpQ-Mechanum", group="Q")
+@TeleOp(name="Q Mechanum", group="FINAL")
 // @Disabled
 
 public class TeleOpQbotMechanum extends OpMode{
@@ -55,6 +56,7 @@ public class TeleOpQbotMechanum extends OpMode{
     //HardwareQBot robot = new HardwareQBot();
     private HardwareQDrive driveTrain = new HardwareQDrive(); // the robot module for the drive train
     private HardwareQGlyph glyphArm = new HardwareQGlyph(); // the robot module for the glyph arm
+    //private HardwareQJewelArm jewelArm = new HardwareQJewelArm(); // the robot module for the jewel arm
     private double speedFactor     = 1;
     private int directionFactor  = 1; // positive = normal direction is forward
     private double maxWheelSpeed = 0.80;
@@ -75,6 +77,7 @@ public class TeleOpQbotMechanum extends OpMode{
          */
         driveTrain.init(hardwareMap,telemetry);
         glyphArm.init(hardwareMap,telemetry);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -225,11 +228,13 @@ public class TeleOpQbotMechanum extends OpMode{
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("left",  "power %.2f, pos %d", left, driveTrain.leftfrontmotor.getCurrentPosition());
+        telemetry.addData("right", "power %.2f, pos %d", right, driveTrain.leftbackmotor.getCurrentPosition());
+        telemetry.addData("front",  "power %.2f, pos %d", left, driveTrain.rightfrontmotor.getCurrentPosition());
+        telemetry.addData("back", "power %.2f, pos %d", right, driveTrain.rightbackmotor.getCurrentPosition());
         telemetry.addData("strafe?  ", strafeMode);
         telemetry.addData("glyph", "%.2f", glyphGrabber);
-        telemetry.addData("arm", "%.2f", m180);
+        telemetry.addData("arm", "%.2f pos=%d", m180, glyphArm.motor180.getCurrentPosition());
         telemetry.update();
     }
 

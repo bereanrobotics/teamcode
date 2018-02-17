@@ -20,7 +20,7 @@ public class HardwareQGlyph extends BereanHardware {
     public Servo glyphLeft  = null;
     public static final double MID_SERVO       =  0.5 ;
 
-    private int motor180MaxPosition = 3000;
+    public int motor180MaxPosition = 1000;
     private double motor180Power = 0.25;
 
     public HardwareQGlyph (){}
@@ -29,7 +29,7 @@ public class HardwareQGlyph extends BereanHardware {
 
         super.init(ahwMap,telemetryPassed);
 
-        motor180 = initMotorEncoded(HardwareQConstants.GLYPH_ARM_MOTORNAME, false);
+        motor180 = initMotorForPosition(HardwareQConstants.GLYPH_ARM_MOTORNAME, false);
         glyphRight = initServo(HardwareQConstants.GLYPH_RIGHT_SERVONAME, 1, false);
         glyphLeft = initServo(HardwareQConstants.GLYPH_LEFT_SERVONAME, 0, false);
 

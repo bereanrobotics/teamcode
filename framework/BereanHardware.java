@@ -43,12 +43,24 @@ public class BereanHardware {
 
     /* handle encoded motor initialization */
     protected DcMotor initMotorEncoded(String name, boolean reverse) {
-        DcMotor motor = initMotor(name,reverse);
+        DcMotor motor = hwMap.dcMotor.get(name);
+        if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
+        motor.setPower(0);
+         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         return motor;
     }
 
+    protected DcMotor initMotorForPosition(String name, boolean reverse) {
+        DcMotor motor = hwMap.dcMotor.get(name);
+        if (reverse) motor.setDirection(DcMotor.Direction.REVERSE);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setPower(0);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        return motor;
+    }
 
     /* handle standard servo initialization */
     protected Servo initServo(String name, double pos,  boolean reverse) {

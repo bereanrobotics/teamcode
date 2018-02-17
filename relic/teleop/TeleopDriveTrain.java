@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
  * the mechanum chassis
  */
 
-@TeleOp(name="DriveTrainTeleop-Mechanum", group="Squad")
+@TeleOp(name="Drive Mechanum", group="Squad")
 // @Disabled
 
 public class TeleopDriveTrain extends OpMode{

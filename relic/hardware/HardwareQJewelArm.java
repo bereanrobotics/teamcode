@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.framework.BereanHardware;
 public class HardwareQJewelArm extends BereanHardware {
 
     /* Public OpMode members. */
+    public static final double JEWEL_ARM_RESTING_POSITION = 0.0;
     public Servo jewelArmLift = null;
     public ColorSensor sensorColor = null;
 

@@ -36,25 +36,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
-import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
+import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
 
 
-@TeleOp(name="Glyph", group="Squad")
+@TeleOp(name="JArm", group="Squad")
 // @Disabled
 
-public class TeleopGlyph extends OpMode{
+public class TeleopJArm extends OpMode{
 
     /* Declare OpMode members. */
-    //HardwareQBot robot = new HardwareQBot();
-    private HardwareQGlyph glyphArm = new HardwareQGlyph(); // the robot module for the glyph arm
-
-
-    //public static final double POWER_FACTOR_180 = 1;
-    static double CLAW_SPEED = 0.4;
-
-    double glyphGrabber = 0;
+    private HardwareQJewelArm jArm = new HardwareQJewelArm();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -64,9 +56,8 @@ public class TeleopGlyph extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        //robot.init(hardwareMap);
-        glyphArm.init(hardwareMap,telemetry);
 
+        jArm.init(hardwareMap,telemetry);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
         updateTelemetry(telemetry);
@@ -97,41 +88,17 @@ public class TeleopGlyph extends OpMode{
 
         final double    CLAW_SPEED  = 0.04 ;                 // sets rate to move servo
 
+        double armPosition = 0;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        // robot's left side
-        //
-        // control using left and right sticks.
-        // speed set based on stick position
-        //
+        armPosition = -gamepad2.right_stick_y;
 
-        // control using the dpad.  strafing mode left and right with forward/back
-        // fixed speed
-        //
-
-
-        //note: The joystick goes negative when pushed forwards, so negate it)
-        m180 = -gamepad2.left_stick_y;
-        int increment = (int) Math.floor( m180 * 100 );
-        int armPos = glyphArm.motor180.getCurrentPosition() + increment;
-        glyphArm.motor180SetPosition( armPos );
-
-        // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad2.right_bumper)
-            glyphGrabber += CLAW_SPEED;
-        else if (gamepad2.left_bumper)
-            glyphGrabber -= CLAW_SPEED;
-
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        glyphGrabber = Range.clip(glyphGrabber, -0.5, 0.5);
-        glyphArm.glyphLeft.setPosition(glyphArm.MID_SERVO + glyphGrabber);
-        glyphArm.glyphRight.setPosition(glyphArm.MID_SERVO - glyphGrabber);
+        armPosition = Range.clip(armPosition, -0.5, 0.5);
+        jArm.jewelArmLift.setPosition(jArm.JEWEL_ARM_RESTING_POSITION + armPosition);
 
 
         // Send telemetry message to signify robot running;
         //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("glyph", "%.2f", glyphGrabber);
-        telemetry.addData("arm", "%.2f", m180);
+        telemetry.addData("jArm pos:", "%.2f", jArm.JEWEL_ARM_RESTING_POSITION + armPosition);
         telemetry.update();
     }
 
