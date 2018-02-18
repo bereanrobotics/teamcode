@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
 
 @Autonomous(name="BlueOneLeft", group="FINAL")
 
-public class Auto extends LinearOpMode{
+public class Blueoneleft extends LinearOpMode{
     HardwareQDrive    drive     = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
     HardwareQGlyph    gArm      = new HardwareQGlyph();
     HardwareQJewelArm jArm      = new HardwareQJewelArm();
