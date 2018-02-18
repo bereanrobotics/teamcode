@@ -46,9 +46,9 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
  * Created by BCHSRobotics1 on 2/10/2018.
  */
 
-@Autonomous(name="Redone", group="FINAL")
+@Autonomous(name="Red two", group="FINAL")
 
-public class Redone extends LinearOpMode{
+public class Redtwo extends LinearOpMode{
     HardwareQDrive    drive     = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
     HardwareQGlyph    gArm      = new HardwareQGlyph();
     HardwareQJewelArm jArm      = new HardwareQJewelArm();
@@ -58,7 +58,7 @@ public class Redone extends LinearOpMode{
     private int colorBasedDrive;
 
     private int teamColor = HardwareQConstants.RED;
-    private int teamPosition = 1 ;
+    private int teamPosition = 2 ;
 
     private VuforiaLocalizer vuforia;
     VuforiaTrackables relicTrackables;
@@ -132,13 +132,14 @@ public class Redone extends LinearOpMode{
 
 
         colorBasedDrive = colorToDirection();
-        drive.strafeFor(colorBasedDrive, 3.5, speed); //get to incrementing point
-        drive.strafeFor(HardwareQConstants.FORWARD, 1, speed);
+        drive.strafeFor(colorBasedDrive, 4, speed); //get to incrementing point
 
-        drive.rotateRobot(HardwareQConstants.RIGHT, 5.6, 0.15);
+        drive.rotateRobot(HardwareQConstants.RIGHT, 3.3, 0.15);
+
+        drive.strafeFor(HardwareQConstants.LEFT, 1.4, speed); //get to incrementing point
 
         //increment();
-        drive.strafeFor(HardwareQConstants.FORWARD, .5, speed );
+//        drive.strafeFor(HardwareQConstants.FORWARD, .25, speed );
         //armMoveTo( gArm.motor180MaxPosition );
 
         gArm.glyphRight.setPosition(0);
@@ -158,6 +159,9 @@ public class Redone extends LinearOpMode{
         //sleep(500);
         //armMoveTo( 100 );
         drive.strafeFor(HardwareQConstants.BACKWARD, 0.5, speed );
+        drive.strafeFor(HardwareQConstants.FORWARD, 1.5, speed );
+        drive.strafeFor(HardwareQConstants.BACKWARD, 0.4, speed );
+
 
        /* drive.strafeFor(HardwareQConstants.FORWARD, 3, speed);
         drive.strafeFor(HardwareQConstants.RIGHT, 3, speed);
