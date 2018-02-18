@@ -43,7 +43,8 @@ public class HardwareQGlyph extends BereanHardware {
             motor180.setTargetPosition( armPos );
             motor180.setPower( motor180Power );
         } else if ( !motor180.isBusy() ) {
-            motor180.setPower( 0 );
+            //motor180.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //motor180.setPower( 0 );
         }
     }
 

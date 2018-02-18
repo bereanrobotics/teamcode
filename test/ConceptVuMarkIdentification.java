@@ -104,7 +104,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-       // parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        // parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
         parameters.vuforiaLicenseKey = "Ac80Bxv/////AAAAGfuMJvbL4EHBo0m/sdW89cEZQtlemG/Mzd5+DnP8zVE+fzNuHuRvUQTpoNwJ6/rkPwmuMiCAzOmspCyheyCAl5OLh7Xbp95m1wWcdjb/kUAdtPsfNel0eNn2ji0iwoWuPtQJ+b8YLFSyzBCkHe9dB05c86KmdvJHAH7+y//rLsAEy5/josOhopghBAEJGUjjwWe5n/I0Fe2Hmpv1Kw8SuhCFp3ibSL/YoCRYrRx0lKQSQ7ZdlcEVO2uVAMpStijUn1rWNlp6WaaZ5+Z1Su8IVWRll/5xFZGs/vdcxpqbJbGXKfZsQE1vYSH6rPc/w0cvBJW09GHxnburccDC5ZBTva63VGbAhBWlkp/MXUvlN9Q5";
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -128,18 +128,18 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        relicTrackables.activate();
+                relicTrackables.activate();
 
-        while (opModeIsActive()) {
+                while (opModeIsActive()) {
 
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                    /**
+                     * See if any of the instances of {@link relicTemplate} are currently visible.
+                     * {@link RelicRecoveryVuMark} is an enum which can have the following values:
+                     * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
+                     * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
+                     */
+                    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending

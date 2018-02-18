@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode.relic.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
@@ -210,6 +211,10 @@ public class TeleOpQbotMechanum extends OpMode{
 
         //note: The joystick goes negative when pushed forwards, so negate it)
         m180 = -gamepad2.left_stick_y;
+        if (gamepad2.left_stick_y == 0) {
+            glyphArm.motor180.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            glyphArm.motor180.setPower(0);
+        }
         int increment = (int) Math.floor( m180 * 100 );
         int armPos = glyphArm.motor180.getCurrentPosition() + increment;
         glyphArm.motor180SetPosition( armPos );

@@ -34,6 +34,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQConstants;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQDrive;
 import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQGlyph;
@@ -43,7 +49,7 @@ import org.firstinspires.ftc.teamcode.relic.hardware.HardwareQJewelArm;
  * Created by BCHSRobotics1 on 2/10/2018.
  */
 
-@Autonomous(name="AutoTest", group="FINAL")
+@Autonomous(name="BlueOneLeft", group="FINAL")
 
 public class Auto extends LinearOpMode{
     HardwareQDrive    drive     = new HardwareQDrive(); // use the class created to define a Aimbot's hardware
@@ -56,6 +62,27 @@ public class Auto extends LinearOpMode{
 
     private int teamColor = HardwareQConstants.BLUE;
     private int teamPosition = 1 ;
+
+    private VuforiaLocalizer vuforia;
+    VuforiaTrackables relicTrackables;
+    VuforiaTrackable relicTemplate;
+
+    public void VuForiaInit() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "Ac80Bxv/////AAAAGfuMJvbL4EHBo0m/sdW89cEZQtlemG/Mzd5+DnP8zVE+fzNuHuRvUQTpoNwJ6/rkPwmuMiCAzOmspCyheyCAl5OLh7Xbp95m1wWcdjb/kUAdtPsfNel0eNn2ji0iwoWuPtQJ+b8YLFSyzBCkHe9dB05c86KmdvJHAH7+y//rLsAEy5/josOhopghBAEJGUjjwWe5n/I0Fe2Hmpv1Kw8SuhCFp3ibSL/YoCRYrRx0lKQSQ7ZdlcEVO2uVAMpStijUn1rWNlp6WaaZ5+Z1Su8IVWRll/5xFZGs/vdcxpqbJbGXKfZsQE1vYSH6rPc/w0cvBJW09GHxnburccDC5ZBTva63VGbAhBWlkp/MXUvlN9Q5";
+        /*
+         * We also indicate which camera on the RC that we wish to use.
+         * Here we chose the back (HiRes) camera (for greater range), but
+         * for a competition robot, the front camera might be more convenient.
+         */
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+    }
 
     public void armMoveTo(int armPos)  {
 
@@ -79,38 +106,64 @@ public class Auto extends LinearOpMode{
         gArm.init (hardwareMap, telemetry);
         jArm.init (hardwareMap, telemetry);
 
+        //VuForiaInit();
         //gArm.glyphRight.setPosition(1); // moving the jewel
         //gArm.glyphLeft.setPosition(0);  // arm to the init pos
          //... add code move glyph arm to init position too
         telemetry.addData("Status", "Initialized");
 
         waitForStart();
+
+        //RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        //if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+           ///set slotnum here...
+       // }
+
         runtime.reset();
 
         gArm.glyphRight.setPosition(1); // picking up
         gArm.glyphLeft.setPosition(0);  // the glyph
 
-        armMoveTo( 500 );
+        pauseRobot(2);
+//        armMoveTo(650);
         //... raise arm a tiny bit
 
         slotNum = 1; //replace with vuforia
 
         knockJewel();
+        pauseRobot(3);
+
 
         colorBasedDrive = colorToDirection();
-        drive.strafeFor(colorBasedDrive, 2.5, speed); //get to incrementing point
+        drive.strafeFor(colorBasedDrive, 4.35, speed); //get to incrementing point
         if (teamPosition == 2) {
             drive.rotateRobot(colorBasedDrive, .5, speed); // rotate 45 degrees to be parallel to goal
         }
-        increment();
-        drive.strafeFor(HardwareQConstants.FORWARD, 1, speed );
-        armMoveTo( gArm.motor180MaxPosition );
-        drive.strafeFor(HardwareQConstants.BACKWARD, 1, speed );
-        gArm.glyphRight.setPosition(0); // moving the jewel
-        gArm.glyphLeft.setPosition(1);  // arm to the init pos
-        sleep(500);
-        armMoveTo( 500 );
+
+        drive.rotateRobot(HardwareQConstants.RIGHT, 5.6, 0.15);
+
+        //increment();
+        drive.strafeFor(HardwareQConstants.FORWARD, .5, speed );
+        //armMoveTo( gArm.motor180MaxPosition );
+
+        gArm.glyphRight.setPosition(0);
+        gArm.glyphLeft.setPosition(1);
+        pauseRobot(1.5);
+        gArm.glyphRight.setPosition(1);
+        gArm.glyphLeft.setPosition(0);
+        pauseRobot(1.5);
+        gArm.glyphRight.setPosition(0);
+        gArm.glyphLeft.setPosition(1);
+        pauseRobot(1.5);
+        gArm.glyphLeft.setPosition(0);
+        gArm.glyphLeft.setPosition(1);
+
+
+        drive.strafeFor(HardwareQConstants.FORWARD, 1.5, speed );
+        //sleep(500);
+        //armMoveTo( 100 );
         drive.strafeFor(HardwareQConstants.BACKWARD, 0.5, speed );
+
        /* drive.strafeFor(HardwareQConstants.FORWARD, 3, speed);
         drive.strafeFor(HardwareQConstants.RIGHT, 3, speed);
         drive.strafeFor(HardwareQConstants.BACKWARD, 3, speed);
@@ -119,16 +172,21 @@ public class Auto extends LinearOpMode{
 
     private void knockJewel() {
         jArm.deploy();
-        if (getColor() == teamColor) {
-            drive.rotateRobot(HardwareQConstants.LEFT, 1.5, 0.15); //rotate 180 degrees
+
+        sleep(4000);
+        if (getColor() != teamColor) {
+            drive.rotateRobot(HardwareQConstants.LEFT, .5, .14); //rotate 180 degrees
             jArm.retract();
-            drive.rotateRobot(HardwareQConstants.RIGHT, 1.5, 0.15); //rotate 180 degrees
+            pauseRobot(.5);
+            drive.rotateRobot(HardwareQConstants.RIGHT, .5, .13); //rotate 180 degrees
             // exchange previous func for encoder version
         } else {
-            drive.rotateRobot(HardwareQConstants.RIGHT, 1.5, 0.15);
+            drive.rotateRobot(HardwareQConstants.RIGHT, .5, .13);
             jArm.retract();
-            drive.rotateRobot(HardwareQConstants.LEFT, 1.5, 0.15); //rotate 180 degrees
+            pauseRobot(.5);
+            drive.rotateRobot(HardwareQConstants.LEFT, .5, .14); //rotate 180 degrees
         }
+
     }
 
     private void increment() {
@@ -164,5 +222,20 @@ public class Auto extends LinearOpMode{
         return ((teamColor == HardwareQConstants.BLUE) ?
         HardwareQConstants.LEFT : HardwareQConstants.RIGHT);
     }
+
+    private void pauseRobot(double pauseSeconds)
+    {
+        double startTime = runtime.seconds();
+
+        drive.stopMoving();
+
+        while (opModeIsActive() && ((runtime.seconds()-startTime) < pauseSeconds))
+        {
+            telemetry.addData("Status", "pausing");
+            telemetry.update();
+        }
+
+    }
+
 
 }
